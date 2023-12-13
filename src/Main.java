@@ -1,12 +1,7 @@
-
-import game.Game;
-import gameManager.GameManager;
-import input.InputManager;
-import ui.Ui;
+import java.io.Console;
 
 public class Main {
-
 	public static void main(String[] args) {
-
+		System.out.println("Hello, World!");
 	}
 }
