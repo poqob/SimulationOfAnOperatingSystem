@@ -1,7 +1,7 @@
 package Process;
 
 // i made copy paste from sevda.
-public class Process {
+public class Proces {
     // fields
     int arrivalTime;
     int priority;
@@ -20,8 +20,8 @@ public class Process {
         return memoryRequirement;
     }
 
-    public Process(int arrivalTime, int priority, int executionTime, int memoryRequirement,
-                   int printers, int scanners, int modems, int cdDrives) {
+    public Proces(int arrivalTime, int priority, int executionTime, int memoryRequirement,
+                  int printers, int scanners, int modems, int cdDrives) {
         this.arrivalTime = arrivalTime;
         this.priority = priority;
         this.executionTime = executionTime;
@@ -56,5 +56,7 @@ public class Process {
         return status;
     }
 
-
+    public int getPriority() {
+        return priority;
+    }
 }
