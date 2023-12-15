@@ -1,25 +1,19 @@
 import java.io.Console;
 
-import Utils.Counter;
+import Utils.Chronometer;
 
 public class Main {
     public static void main(String[] args) {
-        Counter counter = new Counter();
-        counter.start();
-
-        // Run the main thread indefinitely to observe the changing seconds value
+        Chronometer chronometer = new Chronometer(); // <- its our time guys. to get program time, chronometer.getElapsedTime();
+        chronometer.start();
         while (true) {
-            int currentSeconds = counter.getSeconds();
-            System.out.println("Main thread observes seconds: " + currentSeconds);
-            if (currentSeconds == 5)
-                break;
-
-            // Introduce a delay to avoid excessive printing
             try {
-                Thread.sleep(1000);
+                Thread.sleep(2000); // Sleep for 1 second
+                break;
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+        System.out.println(chronometer.getElapsedTime());
     }
 }
