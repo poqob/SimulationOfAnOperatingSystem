@@ -14,7 +14,7 @@ public class Proces {
     final int scanners;
     final int modems;
     final int cdDrives;
-
+    boolean allocated;
 
     // process status
     EProcessStatus status;
@@ -22,6 +22,10 @@ public class Proces {
 
     public int getMemoryRequirement() {
         return memoryRequirement;
+    }
+    
+    public int getExecutionTime() {
+        return executionTime;
     }
 
     public Proces(int pid, int arrivalTime, int priority, int executionTime, int memoryRequirement,
@@ -34,6 +38,7 @@ public class Proces {
         this.scanners = scanners;
         this.modems = modems;
         this.cdDrives = cdDrives;
+        this.allocated = false;
         this.pid = pid;
     }
 
@@ -55,6 +60,7 @@ public class Proces {
     public void run() {
         // implement process works.
         this.status = EProcessStatus.running;
+    	executionTime--;
     }
 
     public EProcessStatus getStatus() {
@@ -63,5 +69,19 @@ public class Proces {
 
     public int getPriority() {
         return priority;
+    }
+    
+    public boolean claimResource () {
+    	// Replace 512 with availableRAM
+    	if (allocated || 512 >= memoryRequirement) {
+    		if (!allocated) {
+    			//availableRAM -= memoryRequirement;
+    		}
+    		allocated = true;
+  	  		/* if (neededDevices.isAvailable) {
+  	  			return true;
+  	  		} */
+    	}
+    	return false;
     }
 }

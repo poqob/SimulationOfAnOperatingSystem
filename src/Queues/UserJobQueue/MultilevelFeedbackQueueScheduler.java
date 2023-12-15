@@ -11,11 +11,13 @@ import java.util.Queue;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import Process.Proces;
+
 class MultilevelFeedbackQueueScheduler {
-    private final Queue<String>[] queues;
+    private final Queue<Proces>[] queues;
     private final int numberOfLevels = 3;
     private final int[] timeQuantums = { 1, 1, 1 };
-
+    
     public MultilevelFeedbackQueueScheduler() {
         this.queues = new LinkedList[numberOfLevels];
 
@@ -24,7 +26,8 @@ class MultilevelFeedbackQueueScheduler {
         }
     }
     
-    public void addProccess (String task, int level) {
+    public void addProccess (Proces task, int level) {
+    	task.ready();
     	queues[level].add(task);
     }
     
@@ -34,7 +37,7 @@ class MultilevelFeedbackQueueScheduler {
     	boolean executed = false;
     	
         for (int i = 0; i < numberOfLevels; i++) {
-            Queue<String> currentQueue = queues[i];
+            Queue<Proces> currentQueue = queues[i];
             if (!currentQueue.isEmpty()) {
             	executed = true;
             	runQueue(currentQueue, i);
@@ -47,15 +50,14 @@ class MultilevelFeedbackQueueScheduler {
         }
     }
     
-    public void runQueue (Queue<String> queue, int level) {
+    private void runQueue (Queue<Proces> queue, int level) {
     	// Get the head
-    	String task = queue.poll();
-    	// check if ram and resource are available
-    	/*
+    	Proces task = queue.poll();
+    	// check if ram and resources are available
+    	
     	if (task.claimResource()) {
-    		// run task
-    		task.remainingTime--;
-    		if (task.remainingTime > 0) {
+    		task.run();
+    		if (task.getExecutionTime() > 0) {
     	    	if (level < 2) {
     				level++;
     			}
@@ -63,12 +65,13 @@ class MultilevelFeedbackQueueScheduler {
     			addProccess(task, level);
     		}
     		else {
-    			cpu.releaseProccess(task, DONE);
+    			// DONE (3)
+    			//cpu.releaseProccess(task, 3);
     		}
     	}
     	else {
-    		cpu.releaseProccess(task, INTERRUPTED);
+    		// INTERRUPTED (2)
+    		//cpu.releaseProccess(task, 2);
     	}
-    	*/
     }
 }
