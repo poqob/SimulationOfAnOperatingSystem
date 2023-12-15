@@ -8,19 +8,18 @@
 package Queues.UserJobQueue;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.Timer;
-import java.util.TimerTask;
-
 import Process.Proces;
 
 class MultilevelFeedbackQueueScheduler {
+    private final int numberOfLevels;
+    private final float[] timeQuantums;
     private final Queue<Proces>[] queues;
-    private final int numberOfLevels = 3;
-    private final int[] timeQuantums = { 1, 1, 1 };
     
     public MultilevelFeedbackQueueScheduler() {
+        this.numberOfLevels = 3;
+        this.timeQuantums = new float[] { 0.98f, 0.98f, 0.98f }; // Approximate values entered for a better result
         this.queues = new LinkedList[numberOfLevels];
-
+        
         for (int i = 0; i < numberOfLevels; i++) {
             this.queues[i] = new LinkedList<>();
         }
@@ -54,9 +53,14 @@ class MultilevelFeedbackQueueScheduler {
     	// Get the head
     	Proces task = queue.poll();
     	// check if ram and resources are available
-    	
     	if (task.claimResource()) {
     		task.run();
+    		// delay for the quantum of the current level
+	    	try {
+	    	    Thread.sleep((long)(timeQuantums[level] * 1000));
+	    	} catch (InterruptedException e) {
+	    	    e.printStackTrace();
+	    	}
     		if (task.getExecutionTime() > 0) {
     	    	if (level < 2) {
     				level++;
