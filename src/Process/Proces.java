@@ -1,16 +1,20 @@
 package Process;
 
+import java.util.Random;
+
 // i made copy paste from sevda.
 public class Proces {
     // fields
+    int pid;
     int arrivalTime;
     int priority;
     int executionTime;
-    int memoryRequirement;
-    int printers;
-    int scanners;
-    int modems;
-    int cdDrives;
+    final int memoryRequirement;
+    final int printers;
+    final int scanners;
+    final int modems;
+    final int cdDrives;
+
 
     // process status
     EProcessStatus status;
@@ -20,7 +24,7 @@ public class Proces {
         return memoryRequirement;
     }
 
-    public Proces(int arrivalTime, int priority, int executionTime, int memoryRequirement,
+    public Proces(int pid, int arrivalTime, int priority, int executionTime, int memoryRequirement,
                   int printers, int scanners, int modems, int cdDrives) {
         this.arrivalTime = arrivalTime;
         this.priority = priority;
@@ -30,6 +34,7 @@ public class Proces {
         this.scanners = scanners;
         this.modems = modems;
         this.cdDrives = cdDrives;
+        this.pid = pid;
     }
 
     public void interrupt() {
