@@ -71,7 +71,18 @@ public class Proces {
         return priority;
     }
     
-    public boolean claimResource () {
+    public int getArrivalTime() {
+        return arrivalTime;
+    }
+    
+    public int getPid() {
+        return pid;
+    }
+    
+    public boolean claimResource (boolean test) {
+    	if (test) {
+    		return true;
+    	}
     	// Replace 512 with availableRAM
     	if (allocated || 512 >= memoryRequirement) {
     		if (!allocated) {

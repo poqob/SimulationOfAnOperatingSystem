@@ -1,1 +1,3 @@
 Mustafa: arkadaşlar buraya notlarımızı yazabiliriz.
+Mehdi: Görevlendiricinin önce RealTimeQueue sonra MFQS'yi tetiklemesi gerekiyor.
+		Görevlendirici MFQS'ye process eklerken addProcess(process, process.getPriority() - 1) şeklinde eklemesi gerekiyor.

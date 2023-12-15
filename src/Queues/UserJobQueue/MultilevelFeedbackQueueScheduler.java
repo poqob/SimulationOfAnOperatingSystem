@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import Process.Proces;
 
-class MultilevelFeedbackQueueScheduler {
+public class MultilevelFeedbackQueueScheduler {
     private final int numberOfLevels;
     private final float[] timeQuantums;
     private final Queue<Proces>[] queues;
@@ -25,35 +25,29 @@ class MultilevelFeedbackQueueScheduler {
         }
     }
     
-    public void addProccess (Proces task, int level) {
+    public void addProcess (Proces task, int level) {
     	task.ready();
     	queues[level].add(task);
     }
     
     // This should be triggered by system timer on every interval (1 sec)
     public void triggerScheduler () {
-    	// Printing purposes. Can be removed later.
-    	boolean executed = false;
-    	
         for (int i = 0; i < numberOfLevels; i++) {
             Queue<Proces> currentQueue = queues[i];
             if (!currentQueue.isEmpty()) {
-            	executed = true;
             	runQueue(currentQueue, i);
                 // A higher queue has tasks in it. So do not check the rest of the queues.
-                break;
+                return;
             }
         }
-        if (!executed) {
-        	System.out.println("[Yetalit]: My Scheduler is Idle for this interval!");
-        }
+        System.out.println("[Yetalit]: My Scheduler is Idle for this interval!");
     }
     
     private void runQueue (Queue<Proces> queue, int level) {
     	// Get the head
     	Proces task = queue.poll();
     	// check if ram and resources are available
-    	if (task.claimResource()) {
+    	if (task.claimResource(true)) {
     		task.run();
     		// delay for the quantum of the current level
 	    	try {
@@ -66,16 +60,27 @@ class MultilevelFeedbackQueueScheduler {
     				level++;
     			}
     			// Add to the next queue
-    			addProccess(task, level);
+    			addProcess(task, level);
     		}
     		else {
     			// DONE (3)
-    			//cpu.releaseProccess(task, 3);
+    			//cpu.releaseProcess(task, 3);
     		}
     	}
     	else {
     		// INTERRUPTED (2)
-    		//cpu.releaseProccess(task, 2);
+    		//cpu.releaseProcess(task, 2);
     	}
+    }
+    
+    public void printStatus () {
+    	System.out.println("//------------------------------------------"); 
+        for (int i = 0; i < numberOfLevels; i++) {
+        	System.out.print(i + ": ");
+        	for(Proces p : queues[i]) { 
+        		System.out.print(p.getPid() + "(" + p.getExecutionTime() + "), ");
+        	}
+        	System.out.print('\n');
+        }
     }
 }
