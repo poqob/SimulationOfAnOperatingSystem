@@ -14,7 +14,7 @@ public class Test {
         FileOperations fileOperations = FileOperations.getInstance();
         fileOperations.readFile();
         LinkedList<Proces> a = fileOperations.getParsedProcesses();
-        a.forEach((proces -> System.out.println(proces.getArrivalTime() + "(pid: " + proces.getPid() + ")")));
+        a.forEach((proces -> System.out.println(proces.getArrivalTime() + " (pid: " + proces.getPid() + ")")));
         // MFQS Test
         MultilevelFeedbackQueueScheduler mfqs = new MultilevelFeedbackQueueScheduler();
         Chronometer chronometer = new Chronometer();

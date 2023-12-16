@@ -32,10 +32,12 @@ public class MultilevelFeedbackQueueScheduler {
     
     // This should be triggered by system timer on every interval (1 sec)
     public void triggerScheduler () {
-        for (int i = 0; i < numberOfLevels; i++) {
-            Queue<Proces> currentQueue = queues[i];
-            if (!currentQueue.isEmpty()) {
-            	runQueue(currentQueue, i);
+        for (Queue<Proces> queue : queues) {
+            if (!queue.isEmpty()) {
+            	// Run queue in new thread
+            	new Thread(() -> {
+                	runQueue(queue);
+            	}).start();
                 // A higher queue has tasks in it. So do not check the rest of the queues.
                 return;
             }
@@ -43,9 +45,10 @@ public class MultilevelFeedbackQueueScheduler {
         System.out.println("[Yetalit]: My Scheduler is Idle for this interval!");
     }
     
-    private void runQueue (Queue<Proces> queue, int level) {
+    private void runQueue (Queue<Proces> queue) {
     	// Get the head
     	Proces task = queue.poll();
+    	int level = task.getPriority() - 1;
     	// check if ram and resources are available
     	if (task.claimResource(true)) {
     		task.run();
