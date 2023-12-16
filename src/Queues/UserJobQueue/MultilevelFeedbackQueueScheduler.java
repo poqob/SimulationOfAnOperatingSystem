@@ -17,7 +17,7 @@ public class MultilevelFeedbackQueueScheduler {
     
     public MultilevelFeedbackQueueScheduler() {
         this.numberOfLevels = 3;
-        this.timeQuantums = new float[] { 0.98f, 0.98f, 0.98f }; // Approximate values entered for a better result
+        this.timeQuantums = new float[] { 0.97f, 0.97f, 0.97f }; // Approximate values entered for a better result
         this.queues = new LinkedList[numberOfLevels];
         
         for (int i = 0; i < numberOfLevels; i++) {
