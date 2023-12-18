@@ -66,6 +66,8 @@ public class MultilevelFeedbackQueueScheduler {
             	if (!task.claimResource(true)) {
             		// INTERRUPTED (2)
             		//cpu.releaseProcess(task, 2);
+            		isBusy = false;
+            		return;
             	}
             }
             task.execute();
