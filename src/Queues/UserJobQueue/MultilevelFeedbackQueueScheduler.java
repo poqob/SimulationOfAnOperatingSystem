@@ -9,16 +9,20 @@ package Queues.UserJobQueue;
 import java.util.LinkedList;
 import java.util.Queue;
 import Process.Proces;
+import Utils.Chronometer;
+import Hardware.*;
 
 public class MultilevelFeedbackQueueScheduler {
     private final int numberOfLevels;
-    private final float[] timeQuantums;
+    private final int[] timeQuantums;
     private final Queue<Proces>[] queues;
+    public boolean isBusy;
     
     public MultilevelFeedbackQueueScheduler() {
-        this.numberOfLevels = 3;
-        this.timeQuantums = new float[] { 0.97f, 0.97f, 0.97f }; // Approximate values entered for a better result
-        this.queues = new LinkedList[numberOfLevels];
+        numberOfLevels = 3;
+        timeQuantums = new int[] { 1, 1, 1 };
+        queues = new LinkedList[numberOfLevels];
+        isBusy = false;
         
         for (int i = 0; i < numberOfLevels; i++) {
             this.queues[i] = new LinkedList<>();
@@ -34,6 +38,7 @@ public class MultilevelFeedbackQueueScheduler {
     public void triggerScheduler () {
         for (Queue<Proces> queue : queues) {
             if (!queue.isEmpty()) {
+            	isBusy = true;
             	// Run queue in new thread
             	new Thread(() -> {
                 	runQueue(queue);
@@ -49,15 +54,21 @@ public class MultilevelFeedbackQueueScheduler {
     	// Get the head
     	Proces task = queue.poll();
     	int level = task.getPriority() - 1;
-    	// check if ram and resources are available
-    	if (task.claimResource(true)) {
+    	// check if ram is available
+    	if (RAM.getInstance().receiveMemory(task)) {
     		task.run();
-    		// delay for the quantum of the current level
-	    	try {
-	    	    Thread.sleep((long)(timeQuantums[level] * 1000));
-	    	} catch (InterruptedException e) {
-	    	    e.printStackTrace();
-	    	}
+    		// wait for the quantum of the current level
+            Chronometer chronometer = new Chronometer();
+            chronometer.start();
+            long firstTime = 0;
+            while (chronometer.getElapsedTime() - firstTime == 0) {
+            	// check if needed resources are available during the execution
+            	if (!task.claimResource(true)) {
+            		// INTERRUPTED (2)
+            		//cpu.releaseProcess(task, 2);
+            	}
+            }
+            task.execute();
     		if (task.getExecutionTime() > 0) {
     	    	if (level < 2) {
     				level++;
@@ -66,6 +77,7 @@ public class MultilevelFeedbackQueueScheduler {
     			addProcess(task, level);
     		}
     		else {
+    			RAM.getInstance().releaseMemory(task);
     			// DONE (3)
     			//cpu.releaseProcess(task, 3);
     		}
@@ -74,6 +86,7 @@ public class MultilevelFeedbackQueueScheduler {
     		// INTERRUPTED (2)
     		//cpu.releaseProcess(task, 2);
     	}
+    	isBusy = false;
     }
     
     public void printStatus () {
@@ -85,5 +98,6 @@ public class MultilevelFeedbackQueueScheduler {
         	}
         	System.out.print('\n');
         }
+        System.out.println("--------------------------------------------"); 
     }
 }

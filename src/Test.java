@@ -6,6 +6,7 @@ import Process.Proces;
 import Devices.*;
 import Dispatcher.FileOperations.FileOperations;
 import Queues.UserJobQueue.*;
+import Queues.RealTimeQueue.*;
 
 /// Tests will be written here. @everyone
 public class Test {
@@ -15,23 +16,33 @@ public class Test {
         fileOperations.readFile();
         LinkedList<Proces> a = fileOperations.getParsedProcesses();
         a.forEach((proces -> System.out.println(proces.getArrivalTime() + " (pid: " + proces.getPid() + ")")));
-        // MFQS Test
+        // Scheduler Test
         MultilevelFeedbackQueueScheduler mfqs = new MultilevelFeedbackQueueScheduler();
+        RealTimeQueueScheduler fcfs = new RealTimeQueueScheduler();
         Chronometer chronometer = new Chronometer();
         chronometer.start();
         long firstTime = 0;
         while (true) {
-        	if (chronometer.getElapsedTime() - firstTime == 1) {
+        	if (chronometer.getElapsedTime() - firstTime == 1 && !fcfs.isBusy && !mfqs.isBusy) {
         		firstTime = chronometer.getElapsedTime();
         		a.forEach((proces -> {
         			// Check if process arrived
         			if (proces.getArrivalTime() == chronometer.getElapsedTime()) {
-        				// Add to queue
-        				mfqs.addProcess(proces, proces.getPriority() - 1);
+        				if (proces.getPriority() == 0) {
+        					// Add to Real Time queue
+        					fcfs.addProcess(proces);
+        				}
+        				else {
+            				// Add to MFQS queue
+            				mfqs.addProcess(proces, proces.getPriority() - 1);
+        				}
         			}
         		}));
+        		fcfs.printStatus();
           		mfqs.printStatus();
-        		// Trigger Scheduler
+          		// Trigger Real Time Scheduler
+          		fcfs.triggerScheduler();
+        		// Trigger MFQS
         		mfqs.triggerScheduler();
         	}
         }

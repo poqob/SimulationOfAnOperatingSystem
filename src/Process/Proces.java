@@ -60,9 +60,12 @@ public class Proces {
     public void run() {
         // implement process works.
         this.status = EProcessStatus.running;
-    	executionTime--;
     }
 
+    public void execute () {
+    	executionTime--;
+    }
+    
     public EProcessStatus getStatus() {
         return status;
     }
@@ -79,20 +82,26 @@ public class Proces {
         return pid;
     }
     
+    public boolean isAllocated () {
+    	return allocated;
+    }
+    
+    public void setAllocated (boolean value) {
+    	allocated = value;
+    }
+    
     public boolean claimResource (boolean test) {
+    	// can be removed later
     	if (test) {
     		return true;
     	}
-    	// Replace 512 with availableRAM
-    	if (allocated || 512 >= memoryRequirement) {
-    		if (!allocated) {
-    			//availableRAM -= memoryRequirement;
-    		}
-    		allocated = true;
-  	  		/* if (neededDevices.isAvailable) {
-  	  			return true;
-  	  		} */
+    	if (priority == 0) {
+    		// accrue resources
+    		return true;
     	}
+  	  	/* if (neededDevices.isAvailable) {
+  	  		return true;
+  	  	} */
     	return false;
     }
 }
