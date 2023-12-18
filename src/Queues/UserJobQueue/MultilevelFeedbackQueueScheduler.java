@@ -61,7 +61,7 @@ public class MultilevelFeedbackQueueScheduler {
             Chronometer chronometer = new Chronometer();
             chronometer.start();
             long firstTime = 0;
-            while (chronometer.getElapsedTime() - firstTime == 0) {
+            while (chronometer.getElapsedTime() - firstTime != timeQuantums[level]) {
             	// check if needed resources are available during the execution
             	if (!task.claimResource(true)) {
             		// INTERRUPTED (2)
