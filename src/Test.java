@@ -20,6 +20,8 @@ public class Test {
         // Scheduler Test
         MultilevelFeedbackQueueScheduler mfqs = new MultilevelFeedbackQueueScheduler();
         RealTimeQueueScheduler fcfs = new RealTimeQueueScheduler();
+  		// Semaphore for concurrency
+        Semaphore sem = new Semaphore(1);
         Chronometer chronometer = new Chronometer();
         chronometer.start();
         long firstTime = 0;
@@ -41,8 +43,6 @@ public class Test {
         		}));
         		fcfs.printStatus();
           		mfqs.printStatus();
-          		// Semaphore for concurrency
-                Semaphore sem = new Semaphore(1);
           		// Trigger Real Time Scheduler
           		fcfs.triggerScheduler(sem);
         		// Trigger MFQS
