@@ -8,8 +8,8 @@
 package Queues.UserJobQueue;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.Semaphore;
 import Process.Proces;
-import Utils.Chronometer;
 import Hardware.*;
 
 public class MultilevelFeedbackQueueScheduler {
@@ -35,13 +35,13 @@ public class MultilevelFeedbackQueueScheduler {
     }
     
     // This should be triggered by system timer on every interval (1 sec)
-    public void triggerScheduler () {
+    public void triggerScheduler (final Semaphore sem) {
         for (Queue<Proces> queue : queues) {
             if (!queue.isEmpty()) {
             	isBusy = true;
             	// Run queue in new thread
             	new Thread(() -> {
-                	runQueue(queue);
+                	runQueue(queue, sem);
             	}).start();
                 // A higher queue has tasks in it. So do not check the rest of the queues.
                 return;
@@ -50,26 +50,33 @@ public class MultilevelFeedbackQueueScheduler {
         System.out.println("[Yetalit]: My Scheduler is Idle for this interval!");
     }
     
-    private void runQueue (Queue<Proces> queue) {
+    private void runQueue (Queue<Proces> queue, final Semaphore sem) {
     	// Get the head
     	Proces task = queue.poll();
     	int level = task.getPriority() - 1;
     	// check if ram is available
     	if (RAM.getInstance().receiveMemory(task)) {
     		task.run();
+    		try {
+        		// Wait for the realtime scheduler to acquire resources
+				sem.acquire();
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+    		sem.release();
+    		// if needed sources are not available
+    		/*
+    		 *  // INTERRUPTED (2)
+                //cpu.releaseProcess(task, 2);
+            	isBusy = false;
+            	return;
+    		 */
     		// wait for the quantum of the current level
-            Chronometer chronometer = new Chronometer();
-            chronometer.start();
-            long firstTime = 0;
-            while (chronometer.getElapsedTime() - firstTime != timeQuantums[level]) {
-            	// check if needed resources are available during the execution
-            	if (!task.claimResource(true)) {
-            		// INTERRUPTED (2)
-            		//cpu.releaseProcess(task, 2);
-            		isBusy = false;
-            		return;
-            	}
-            }
+	    	try {
+	    	    Thread.sleep(timeQuantums[level] * 1000);
+	    	} catch (InterruptedException e) {
+	    	    e.printStackTrace();
+	    	}
             task.execute();
     		if (task.getExecutionTime() > 0) {
     	    	if (level < 2) {

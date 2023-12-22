@@ -1,5 +1,6 @@
 package Queues.RealTimeQueue;
 import java.util.LinkedList;
+import java.util.concurrent.Semaphore;
 import Process.Proces;
 import Hardware.*;
 
@@ -17,26 +18,32 @@ public class RealTimeQueueScheduler {
     	realTimeQueue.add(task);
     }
     
-    public void triggerScheduler () {
+    public void triggerScheduler (final Semaphore sem) {
+    	// Lock the semaphore
+    	try {
+			sem.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
         if (!realTimeQueue.isEmpty()) {
             isBusy = true;
             // Run queue in new thread
             new Thread(() -> {
-                runQueue(realTimeQueue);
+                runQueue(realTimeQueue, sem);
             }).start();
             return;
         }
-        
+        sem.release();
         System.out.println("RealTimeQueue Scheduler is Idle for this time interval!");
     }
     
-    private void runQueue (LinkedList<Proces> fcfs) {
+    private void runQueue (LinkedList<Proces> fcfs, final Semaphore sem) {
     	Proces task = fcfs.peek();	// Get the head
     	// check if ram is available
 		if(RAM.getInstance().receiveMemory(task)){
 			task.run();
-			// accrue needed resources
-			task.claimResource(true);
+			// acquire needed resources here
+			sem.release();
 			// wait for one time interval
 	    	try {
 	    	    Thread.sleep(1000);
@@ -60,7 +67,7 @@ public class RealTimeQueueScheduler {
     } 
     public void printStatus () {
     	System.out.println("//------------------------------------------");
-    	System.out.print("Real Time: ");
+    	System.out.print("RealTime: ");
         for(Proces p : realTimeQueue) { 
         	System.out.print(p.getPid() + "(" + p.getExecutionTime() + "), ");
         }

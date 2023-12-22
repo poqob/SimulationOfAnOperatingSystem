@@ -1,5 +1,6 @@
 import java.io.File;
 import java.util.LinkedList;
+import java.util.concurrent.Semaphore;
 
 import Utils.Chronometer;
 import Process.Proces;
@@ -40,10 +41,12 @@ public class Test {
         		}));
         		fcfs.printStatus();
           		mfqs.printStatus();
+          		// Semaphore for concurrency
+                Semaphore sem = new Semaphore(1);
           		// Trigger Real Time Scheduler
-          		fcfs.triggerScheduler();
+          		fcfs.triggerScheduler(sem);
         		// Trigger MFQS
-        		mfqs.triggerScheduler();
+        		mfqs.triggerScheduler(sem);
         	}
         }
     }

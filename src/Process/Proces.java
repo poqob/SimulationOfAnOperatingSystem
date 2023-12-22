@@ -45,21 +45,25 @@ public class Proces {
     public void interrupt() {
         // implement process works.
         this.status = EProcessStatus.interrupted;
+        System.out.println("(" + pid + ") is interrupted!");
     }
 
     public void ready() {
         // implement process works.
         this.status = EProcessStatus.ready;
+        System.out.println("(" + pid + ") is ready!");
     }
 
     public void done() {
         // implement process works.
         this.status = EProcessStatus.done;
+        System.out.println("(" + pid + ") is done!");
     }
 
     public void run() {
         // implement process works.
         this.status = EProcessStatus.running;
+        System.out.println("(" + pid + ") is running!");
     }
 
     public void execute () {
@@ -88,20 +92,5 @@ public class Proces {
     
     public void setAllocated (boolean value) {
     	allocated = value;
-    }
-    
-    public boolean claimResource (boolean test) {
-    	// can be removed later
-    	if (test) {
-    		return true;
-    	}
-    	if (priority == 0) {
-    		// accrue resources
-    		return true;
-    	}
-  	  	/* if (neededDevices.isAvailable) {
-  	  		return true;
-  	  	} */
-    	return false;
     }
 }
