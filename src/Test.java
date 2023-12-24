@@ -45,6 +45,8 @@ public class Test {
 							// Add to MFQS queue
 							mfqs.addProcess(proces, proces.getPriority() - 1);
 						}
+						else
+                    		FileOperations.doneProcessCount++;      // if it's an invalid process, increase count regardless
 					}
 				}));
 				fcfs.printStatus();

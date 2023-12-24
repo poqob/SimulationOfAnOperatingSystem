@@ -6,6 +6,7 @@ import Utils.Chronometer;
 import java.util.LinkedList;
 import java.util.concurrent.Semaphore;
 
+import Dispatcher.FileOperations.FileOperations;
 import Hardware.RAM;
 
 public class Dispatcher {
@@ -48,6 +49,8 @@ public class Dispatcher {
             				// Add to MFQS queue
             				mfqs.addProcess(proces, proces.getPriority() - 1);
         				}
+                        
+
         			}
         		}));
         		fcfs.printStatus();

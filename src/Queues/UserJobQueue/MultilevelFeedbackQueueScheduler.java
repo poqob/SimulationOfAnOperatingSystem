@@ -67,7 +67,7 @@ public class MultilevelFeedbackQueueScheduler {
     		 */
     		// wait for the quantum of the current level
 	    	try {
-	    	    Thread.sleep(timeQuantums[level] * 400);
+	    	    Thread.sleep(timeQuantums[level] * 10);
 	    	} catch (InterruptedException e) {
 	    	    e.printStackTrace();
 	    	}

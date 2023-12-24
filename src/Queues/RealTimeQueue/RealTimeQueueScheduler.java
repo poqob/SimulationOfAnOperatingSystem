@@ -34,7 +34,7 @@ public class RealTimeQueueScheduler {
 		sem.release();
 		// wait for one time interval
 	    try {
-	    	   Thread.sleep(400);
+	    	   Thread.sleep(10);
 	    } catch (InterruptedException e) {
 	    	   e.printStackTrace();
 	    }
