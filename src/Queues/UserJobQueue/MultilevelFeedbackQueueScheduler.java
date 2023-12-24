@@ -9,6 +9,8 @@ package Queues.UserJobQueue;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.Semaphore;
+
+import Dispatcher.FileOperations.FileOperations;
 import Process.Proces;
 import Hardware.*;
 
@@ -65,7 +67,7 @@ public class MultilevelFeedbackQueueScheduler {
     		 */
     		// wait for the quantum of the current level
 	    	try {
-	    	    Thread.sleep(timeQuantums[level] * 1000);
+	    	    Thread.sleep(timeQuantums[level] * 400);
 	    	} catch (InterruptedException e) {
 	    	    e.printStackTrace();
 	    	}
@@ -80,6 +82,7 @@ public class MultilevelFeedbackQueueScheduler {
     		else {
     			RAM.getInstance().releaseMemory(task);
     			task.done();
+				FileOperations.doneProcessCount++;
     			// DONE (3)
     			//cpu.releaseProcess(task, 3);
     		}

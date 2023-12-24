@@ -26,13 +26,13 @@ public class Test {
 		// Semaphore for concurrency
 		Semaphore sem = new Semaphore(1);
 		Chronometer chronometer = new Chronometer();
-		int maxChronometerTime = fileOperations.getMaxOverallTime() + 1;
-		System.out.println("Program life time:" + maxChronometerTime);
+		int numberOfProcesses = fileOperations.numberOfProcesses();
+		System.out.println("Total number of processes :" + numberOfProcesses);
 
 		chronometer.start();
 		long firstTime = -1;
 		//while (chronometer.getElapsedTime() <= maxChronometerTime) {
-		while (true) {
+		while (numberOfProcesses > FileOperations.doneProcessCount) {
 			if (chronometer.getElapsedTime() - firstTime == 1) {
 				firstTime = chronometer.getElapsedTime();
 				a.forEach((proces -> {
@@ -80,6 +80,6 @@ public class Test {
 				}
 			}
 		}
-		//System.out.println("No process left..");
+		System.out.println("No process left..");
 	}
 }

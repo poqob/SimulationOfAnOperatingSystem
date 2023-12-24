@@ -1,6 +1,8 @@
 package Queues.RealTimeQueue;
 import java.util.LinkedList;
 import java.util.concurrent.Semaphore;
+
+import Dispatcher.FileOperations.FileOperations;
 import Process.Proces;
 import Hardware.*;
 
@@ -32,7 +34,7 @@ public class RealTimeQueueScheduler {
 		sem.release();
 		// wait for one time interval
 	    try {
-	    	   Thread.sleep(1000);
+	    	   Thread.sleep(400);
 	    } catch (InterruptedException e) {
 	    	   e.printStackTrace();
 	    }
@@ -44,6 +46,7 @@ public class RealTimeQueueScheduler {
 			task=fcfs.pollFirst();		// discard the first process from the queue
 			RAM.getInstance().releaseMemory(task);
 			task.done();
+			FileOperations.doneProcessCount++;
 			//cpu.releaseProcess(task, 3);
     	}
     }
