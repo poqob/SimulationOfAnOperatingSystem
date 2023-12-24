@@ -6,11 +6,9 @@ import Hardware.*;
 
 public class RealTimeQueueScheduler {
     private final LinkedList<Proces> realTimeQueue;
-    public boolean isBusy;
     
     public RealTimeQueueScheduler() {
         realTimeQueue = new LinkedList<>();
-        isBusy = false;
     }
     
     public void addProcess (Proces task) {
@@ -26,11 +24,7 @@ public class RealTimeQueueScheduler {
 			e.printStackTrace();
 		}
         if (!realTimeQueue.isEmpty()) {
-            isBusy = true;
-            // Run queue in new thread
-            new Thread(() -> {
-                runQueue(realTimeQueue, sem);
-            }).start();
+            runQueue(realTimeQueue, sem);
             return;
         }
         sem.release();
@@ -39,28 +33,26 @@ public class RealTimeQueueScheduler {
     
     private void runQueue (LinkedList<Proces> fcfs, final Semaphore sem) {
     	Proces task = fcfs.peek();	// Get the head
-    	// check if ram is available
-		
-			task.run();
-			// acquire needed resources here
-			sem.release();
-			// wait for one time interval
-	    	try {
-	    	    Thread.sleep(1000);
-	    	} catch (InterruptedException e) {
-	    	    e.printStackTrace();
-	    	}
-	    	task.execute();
-    		if (task.getExecutionTime() > 0) {
-    	    	fcfs.set(0,task);		// update the first process of the queue
-    		}
-    		else {
-				task=fcfs.pollFirst();		// discard the first process from the queue
-				RAM.getInstance().releaseMemory(task);
-				//cpu.releaseProcess(task, 3);
-    		}
-		isBusy = false;
-    } 
+		task.run();
+		// acquire needed resources here
+		sem.release();
+		// wait for one time interval
+	    try {
+	    	   Thread.sleep(1000);
+	    } catch (InterruptedException e) {
+	    	   e.printStackTrace();
+	    }
+	    task.execute();
+    	if (task.getExecutionTime() > 0) {
+    	    fcfs.set(0,task);		// update the first process of the queue
+    	}
+    	else {
+			task=fcfs.pollFirst();		// discard the first process from the queue
+			RAM.getInstance().releaseMemory(task);
+			task.done();
+			//cpu.releaseProcess(task, 3);
+    	}
+    }
     public void printStatus () {
     	System.out.println("//------------------------------------------");
     	System.out.print("RealTime: ");

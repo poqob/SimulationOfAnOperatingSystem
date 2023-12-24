@@ -6,6 +6,8 @@ import Utils.Chronometer;
 import java.util.LinkedList;
 import java.util.concurrent.Semaphore;
 
+import Hardware.RAM;
+
 public class Dispatcher {
     MultilevelFeedbackQueueScheduler mfqs;
     RealTimeQueueScheduler fcfs;
@@ -27,20 +29,22 @@ public class Dispatcher {
     }
 
     public void dispatchProcesses(LinkedList<Proces> processList, Chronometer chronometer) {
+        Thread triggerFCFS;
+        Thread triggerMFQS;
     	// Semaphore for concurrency
         Semaphore sem = new Semaphore(1);
-        long firstTime = 0;
+        long firstTime = -1;
         while (true) {
-        	if (chronometer.getElapsedTime() - firstTime == 1 && !fcfs.isBusy && !mfqs.isBusy) {
+        	if (chronometer.getElapsedTime() - firstTime == 1) {
         		firstTime = chronometer.getElapsedTime();
         		processList.forEach((proces -> {
         			// Check if process arrived
         			if (proces.getArrivalTime() == chronometer.getElapsedTime()) {
-        				if (proces.getPriority() == 0) {
+        				if (proces.getPriority() == 0 && RAM.getInstance().receiveMemory(proces)) {
         					// Add to Real Time queue
         					fcfs.addProcess(proces);
         				}
-        				else {
+        				else if (proces.getPriority() > 0 && proces.getMemoryRequirement() <= 960) {
             				// Add to MFQS queue
             				mfqs.addProcess(proces, proces.getPriority() - 1);
         				}
@@ -48,10 +52,29 @@ public class Dispatcher {
         		}));
         		fcfs.printStatus();
           		mfqs.printStatus();
-          		// Trigger Real Time Scheduler
-          		fcfs.triggerScheduler(sem);
-        		// Trigger MFQS
-        		mfqs.triggerScheduler(sem);
+          		// Trigger Real Time Scheduler in a new thread
+                triggerFCFS = new Thread() {
+                    @Override
+                    public void run() {
+                  		fcfs.triggerScheduler(sem);
+                    }
+                };
+                triggerFCFS.start();
+        		// Trigger MFQS in a new thread
+                triggerMFQS = new Thread() {
+                    @Override
+                    public void run() {
+                    	mfqs.triggerScheduler(sem);
+                    }
+                };
+                triggerMFQS.start();
+                // Wait for threads to finish
+                try {
+					triggerFCFS.join();
+					triggerMFQS.join();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
         	}
         }
     }

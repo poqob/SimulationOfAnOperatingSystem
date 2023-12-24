@@ -21,6 +21,8 @@ public class Test {
 		// Scheduler Test
 		MultilevelFeedbackQueueScheduler mfqs = new MultilevelFeedbackQueueScheduler();
 		RealTimeQueueScheduler fcfs = new RealTimeQueueScheduler();
+        Thread triggerFCFS;
+        Thread triggerMFQS;
 		// Semaphore for concurrency
 		Semaphore sem = new Semaphore(1);
 		Chronometer chronometer = new Chronometer();
@@ -28,9 +30,10 @@ public class Test {
 		System.out.println("Program life time:" + maxChronometerTime);
 
 		chronometer.start();
-		long firstTime = 0;
-		while (chronometer.getElapsedTime() <= maxChronometerTime) {
-			if (chronometer.getElapsedTime() - firstTime == 1 && !fcfs.isBusy && !mfqs.isBusy) {
+		long firstTime = -1;
+		//while (chronometer.getElapsedTime() <= maxChronometerTime) {
+		while (true) {
+			if (chronometer.getElapsedTime() - firstTime == 1) {
 				firstTime = chronometer.getElapsedTime();
 				a.forEach((proces -> {
 					// Check if process arrived
@@ -38,7 +41,7 @@ public class Test {
 						if (proces.getPriority() == 0 && RAM.getInstance().receiveMemory(proces)) {
 							// Add to Real Time queue
 							fcfs.addProcess(proces);
-						} else if (proces.getPriority() > 0 && RAM.getInstance().receiveMemory(proces)) {
+						} else if (proces.getPriority() > 0 && proces.getMemoryRequirement() <= 960) {
 							// Add to MFQS queue
 							mfqs.addProcess(proces, proces.getPriority() - 1);
 						}
@@ -46,12 +49,31 @@ public class Test {
 				}));
 				fcfs.printStatus();
 				mfqs.printStatus();
-				// Trigger Real Time Scheduler
-				fcfs.triggerScheduler(sem);
-				// Trigger MFQS
-				mfqs.triggerScheduler(sem);
+				// Trigger RealTime Scheduler in a new thread
+                triggerFCFS = new Thread() {
+                    @Override
+                    public void run() {
+                  		fcfs.triggerScheduler(sem);
+                    }
+                };
+                triggerFCFS.start();
+        		// Trigger MFQS in a new thread
+                triggerMFQS = new Thread() {
+                    @Override
+                    public void run() {
+                    	mfqs.triggerScheduler(sem);
+                    }
+                };
+                triggerMFQS.start();
+                // Wait for threads to finish
+                try {
+					triggerFCFS.join();
+					triggerMFQS.join();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		}
-		System.out.println("No process left..");
+		//System.out.println("No process left..");
 	}
 }
