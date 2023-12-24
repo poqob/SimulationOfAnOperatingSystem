@@ -41,7 +41,7 @@ public class FileOperations {
         Proces proces;
 
         // Split the string into an array of substrings using ","
-        String[] parts = line.split(",");
+        String[] parts = line.trim().split(",");
         // Create an array to store the parsed integers
         int[] integers = new int[parts.length];
 
