@@ -2,8 +2,8 @@ package Utils;
 
 public class Chronometer {
 
-    private long startTime;
-    private long elapsedTime;
+    private long startTime = 0;
+    private long elapsedTime = 0;
 
     public void start() {
         startTime = System.currentTimeMillis();

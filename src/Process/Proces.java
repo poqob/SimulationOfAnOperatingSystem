@@ -1,5 +1,6 @@
 package Process;
 
+import java.util.LinkedList;
 import java.util.Random;
 
 // i made copy paste from sevda.
@@ -41,7 +42,6 @@ public class Proces {
         this.allocated = false;
         this.pid = pid;
     }
-
     public void interrupt() {
         // implement process works.
         this.status = EProcessStatus.interrupted;
@@ -81,6 +81,7 @@ public class Proces {
     public int getArrivalTime() {
         return arrivalTime;
     }
+    
     
     public int getPid() {
         return pid;

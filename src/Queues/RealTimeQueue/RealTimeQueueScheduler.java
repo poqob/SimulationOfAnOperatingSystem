@@ -40,7 +40,7 @@ public class RealTimeQueueScheduler {
     private void runQueue (LinkedList<Proces> fcfs, final Semaphore sem) {
     	Proces task = fcfs.peek();	// Get the head
     	// check if ram is available
-		if(RAM.getInstance().receiveMemory(task)){
+		
 			task.run();
 			// acquire needed resources here
 			sem.release();
@@ -59,10 +59,6 @@ public class RealTimeQueueScheduler {
 				RAM.getInstance().releaseMemory(task);
 				//cpu.releaseProcess(task, 3);
     		}
-		}
-    	else {
-    		// error: no RAM available for real time process
-    	}
 		isBusy = false;
     } 
     public void printStatus () {

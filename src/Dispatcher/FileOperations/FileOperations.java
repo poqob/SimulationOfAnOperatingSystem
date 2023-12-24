@@ -41,21 +41,22 @@ public class FileOperations {
         Proces proces;
 
         // Split the string into an array of substrings using ","
-        String[] parts = line.split(",");
+        String[] parts = line.replaceAll("\\s+","").split(",");
         // Create an array to store the parsed integers
-        int[] integers = new int[parts.length];
+        int[] processAttributes = new int[parts.length];
 
         // Parse each substring into an integer
         for (int i = 0; i < parts.length; i++)
-            integers[i] = Integer.parseInt(parts[i]);
+            processAttributes[i] = Integer.parseInt(parts[i]);
 
         // create and add process
-        proces = new Proces(pickRandom(), integers[0], integers[1], integers[2], integers[3], integers[4], integers[5], integers[6], integers[7]);
+        proces = new Proces(pickRandom(), processAttributes[0], processAttributes[1], processAttributes[2],
+         processAttributes[3], processAttributes[4], processAttributes[5], processAttributes[6], processAttributes[7]);
         processList.add(proces);
 
     }
 
-    private int pickRandom() {
+    private int pickRandom() {      // for picking a random pid
         int val = random.nextInt();
         if (_randList.contains(val))
             return pickRandom();
@@ -98,5 +99,22 @@ public class FileOperations {
         return processList;
     }
 
-
+    public int getMaxOverallTime() {
+        int maxArrivalTime = 0;
+        int timerMax = 0;       // max time for the processes to be executed
+    
+        for (Proces process : processList) {
+            int arrivalTime = process.getArrivalTime();
+            int executionTime = process.getExecutionTime();
+    
+            if (arrivalTime >= maxArrivalTime) {        // get the max arrival time from the list
+                maxArrivalTime = arrivalTime;
+    
+                if (executionTime + arrivalTime >= timerMax)       // get the max overall time from the processes
+                    timerMax = executionTime + arrivalTime;
+                
+            }
+        }
+        return timerMax;
+    }
 }

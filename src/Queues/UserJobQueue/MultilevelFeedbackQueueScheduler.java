@@ -55,7 +55,6 @@ public class MultilevelFeedbackQueueScheduler {
     	Proces task = queue.poll();
     	int level = task.getPriority() - 1;
     	// check if ram is available
-    	if (RAM.getInstance().receiveMemory(task)) {
     		task.run();
     		try {
         		// Wait for the realtime scheduler to acquire resources
@@ -90,11 +89,6 @@ public class MultilevelFeedbackQueueScheduler {
     			// DONE (3)
     			//cpu.releaseProcess(task, 3);
     		}
-    	}
-    	else {
-    		// INTERRUPTED (2)
-    		//cpu.releaseProcess(task, 2);
-    	}
     	isBusy = false;
     }
     
