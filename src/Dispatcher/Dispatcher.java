@@ -52,6 +52,12 @@ public class Dispatcher {
         		}));
         		fcfs.printStatus();
           		mfqs.printStatus();
+		    	// Lock the semaphore
+		    	try {
+					sem.acquire();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
           		// Trigger Real Time Scheduler in a new thread
                 triggerFCFS = new Thread() {
                     @Override

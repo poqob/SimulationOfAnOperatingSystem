@@ -17,12 +17,6 @@ public class RealTimeQueueScheduler {
     }
     
     public void triggerScheduler (final Semaphore sem) {
-    	// Lock the semaphore
-    	try {
-			sem.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
         if (!realTimeQueue.isEmpty()) {
             runQueue(realTimeQueue, sem);
             return;
