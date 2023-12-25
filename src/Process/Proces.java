@@ -1,7 +1,12 @@
 package Process;
 
+import java.net.InterfaceAddress;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Random;
+
+import Devices.EDevices;
 
 // i made copy paste from sevda.
 public class Proces {
@@ -24,7 +29,7 @@ public class Proces {
     public int getMemoryRequirement() {
         return memoryRequirement;
     }
-    
+
     public int getExecutionTime() {
         return executionTime;
     }
@@ -42,6 +47,7 @@ public class Proces {
         this.allocated = false;
         this.pid = pid;
     }
+
     public void interrupt() {
         // implement process works.
         this.status = EProcessStatus.interrupted;
@@ -66,10 +72,10 @@ public class Proces {
         System.out.println("(" + pid + ") is running!");
     }
 
-    public void execute () {
-    	executionTime--;
+    public void execute() {
+        executionTime--;
     }
-    
+
     public EProcessStatus getStatus() {
         return status;
     }
@@ -77,21 +83,31 @@ public class Proces {
     public int getPriority() {
         return priority;
     }
-    
+
     public int getArrivalTime() {
         return arrivalTime;
     }
-    
-    
+
+
     public int getPid() {
         return pid;
     }
-    
-    public boolean isAllocated () {
-    	return allocated;
+
+    public boolean isAllocated() {
+        return allocated;
     }
-    
-    public void setAllocated (boolean value) {
-    	allocated = value;
+
+    public void setAllocated(boolean value) {
+        allocated = value;
+    }
+
+    // get input/output requirements as a map.
+    public Map<EDevices, Integer> getIORequirements() {
+        Map<EDevices, Integer> map = new HashMap<EDevices, Integer>();
+        map.put(EDevices.Browser, scanners);
+        map.put(EDevices.CD, cdDrives);
+        map.put(EDevices.Printer, printers);
+        map.put(EDevices.Router, modems);
+        return map;
     }
 }
