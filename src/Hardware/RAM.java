@@ -26,7 +26,7 @@ public class RAM extends AHardware {
         return _instance;
     }
 
-    private static boolean allocatePrimary(Proces process) {
+    private boolean allocatePrimary(Proces process) {
         if (available_primary_memory_area >= process.getMemoryRequirement()) {
             available_primary_memory_area -= process.getMemoryRequirement();
             process.setAllocated(true);
@@ -35,7 +35,7 @@ public class RAM extends AHardware {
             return false;
     }
 
-    private static boolean allocateSecondary(Proces process) {
+    private boolean allocateSecondary(Proces process) {
         if (available_secondary_memory_area >= process.getMemoryRequirement()) {
             available_secondary_memory_area -= process.getMemoryRequirement();
             process.setAllocated(true);
@@ -44,29 +44,29 @@ public class RAM extends AHardware {
             return false;
     }
 
-    private static boolean freePrimary(Proces process) {
+    private boolean freePrimary(Proces process) {
         available_primary_memory_area += process.getMemoryRequirement();
         return true;
     }
 
-    private static boolean freeSecondary(Proces process) {
+    private boolean freeSecondary(Proces process) {
         available_secondary_memory_area += process.getMemoryRequirement();
         return true;
     }
 
 
-    public static boolean receiveMemory(Proces process) {
-    	if (process.isAllocated()) {
-    		return true;
-    	}
+    public boolean receiveMemory(Proces process) {
+        if (process.isAllocated()) {
+            return true;
+        }
         if (process.getPriority() == 0)
             return allocatePrimary(process);
         else
             return allocateSecondary(process);
     }
 
-    public static boolean releaseMemory(Proces process) {
-    	process.setAllocated(false);
+    public boolean releaseMemory(Proces process) {
+        process.setAllocated(false);
         if (process.getPriority() == 0)
             return freePrimary(process);
         else
@@ -74,7 +74,7 @@ public class RAM extends AHardware {
     }
 
 
-    public static int getAvailableRam() {
+    public int getAvailableRam() {
         return available_primary_memory_area + available_secondary_memory_area;
     }
 
