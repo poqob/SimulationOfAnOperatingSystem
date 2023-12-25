@@ -11,6 +11,7 @@ public class CD extends ADevice {
     private static CD _instance;
 
     private CD() {
+        super(EDevices.CD);
         sources = new boolean[]{false, false};
         proces = new Proces[]{null, null};
     }
@@ -23,7 +24,7 @@ public class CD extends ADevice {
 
     // @return true if request success, else false.
     @Override
-    public boolean toRequest(Proces process) {
+    public boolean allocate(Proces process) {
         if (proces[0] == null) {
             proces[0] = process;
             sources[0] = true;
@@ -37,7 +38,7 @@ public class CD extends ADevice {
 
     // @return true if request success, else false.
     @Override
-    public boolean toRelease(Proces process) {
+    public boolean release(Proces process) {
         if (proces[0] == process) {
             proces[0] = null;
             sources[0] = false;

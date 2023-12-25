@@ -12,6 +12,7 @@ public class Browser extends ADevice {
     private static Browser _instance;
 
     private Browser() {
+        super(EDevices.Browser);
         sources = new boolean[]{false};
         proces = new Proces[]{null};
     }
@@ -24,7 +25,7 @@ public class Browser extends ADevice {
 
     // @return true if request success, else false.
     @Override
-    public boolean toRequest(Proces process) {
+    public boolean allocate(Proces process) {
         if (proces[0] == null) {
             proces[0] = process;
             sources[0] = true;
@@ -34,7 +35,7 @@ public class Browser extends ADevice {
 
     // @return true if request success, else false.
     @Override
-    public boolean toRelease(Proces process) {
+    public boolean release(Proces process) {
         if (proces[0] == process) {
             proces[0] = null;
             sources[0] = false;

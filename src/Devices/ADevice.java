@@ -4,9 +4,15 @@ import Process.Proces;
 
 /// All devices will be derived from ADevice class. Override methods.
 public abstract class ADevice {
-    public abstract boolean toRequest(Proces process);
+    public final EDevices deviceType;
 
-    public abstract boolean toRelease(Proces process);
+    protected ADevice(EDevices deviceType) {
+        this.deviceType = deviceType;
+    }
+
+    public abstract boolean allocate(Proces process);
+
+    public abstract boolean release(Proces process);
 
     public abstract int availableResources();
 

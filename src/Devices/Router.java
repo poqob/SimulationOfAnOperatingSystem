@@ -13,6 +13,7 @@ public class Router extends ADevice {
     private static Router _instance;
 
     private Router() {
+        super(EDevices.Router);
         sources = new boolean[]{false};
         proces = new Proces[]{null};
     }
@@ -25,7 +26,7 @@ public class Router extends ADevice {
 
     // @return true if request success, else false.
     @Override
-    public boolean toRequest(Proces process) {
+    public boolean allocate(Proces process) {
         if (proces[0] == null) {
             proces[0] = process;
             sources[0] = true;
@@ -35,7 +36,7 @@ public class Router extends ADevice {
 
     // @return true if request success, else false.
     @Override
-    public boolean toRelease(Proces process) {
+    public boolean release(Proces process) {
         if (proces[0] == process) {
             proces[0] = null;
             sources[0] = false;

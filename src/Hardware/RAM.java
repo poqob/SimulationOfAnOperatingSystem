@@ -12,12 +12,16 @@ public class RAM extends AHardware {
     private static int available_primary_memory_area;
     // if incoming process's priority level isn't 0 then allocate secondary memory area.
     private static int available_secondary_memory_area;
-
+    // RAM instance
     private static RAM _instance;
 
+    public final int primary_memory_size = 64;
+    public final int secondary_memory_size = 960;
+
+    // private constructor
     private RAM() {
-        available_primary_memory_area = 64;
-        available_secondary_memory_area = 960;
+        available_primary_memory_area = primary_memory_size;
+        available_secondary_memory_area = secondary_memory_size;
     }
 
     public static RAM getInstance() {
@@ -78,5 +82,7 @@ public class RAM extends AHardware {
         return available_primary_memory_area + available_secondary_memory_area;
     }
 
-
+    public int getTotalRam() {
+        return primary_memory_size + secondary_memory_size;
+    }
 }

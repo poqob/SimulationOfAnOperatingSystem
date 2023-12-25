@@ -12,6 +12,7 @@ public class Printer extends ADevice {
     private static Printer _instance;
 
     private Printer() {
+        super(EDevices.Printer);
         sources = new boolean[]{false, false};
         proces = new Proces[]{null, null};
     }
@@ -24,7 +25,7 @@ public class Printer extends ADevice {
 
     // @return true if request success, else false.
     @Override
-    public boolean toRequest(Proces process) {
+    public boolean allocate(Proces process) {
         if (proces[0] == null) {
             proces[0] = process;
             sources[0] = true;
@@ -38,7 +39,7 @@ public class Printer extends ADevice {
 
     // @return true if request success, else false.
     @Override
-    public boolean toRelease(Proces process) {
+    public boolean release(Proces process) {
         if (proces[0] == process) {
             proces[0] = null;
             sources[0] = false;
