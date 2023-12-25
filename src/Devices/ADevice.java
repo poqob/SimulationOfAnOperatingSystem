@@ -7,4 +7,8 @@ public abstract class ADevice {
     public abstract boolean toRequest(Proces process);
 
     public abstract boolean toRelease(Proces process);
+
+    public abstract int availableResources();
+
+    public abstract Proces[] getSourceOwners();
 }
