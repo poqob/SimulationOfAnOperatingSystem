@@ -1,9 +1,6 @@
 package Dispatcher;
 
-import Devices.Browser;
-import Devices.CD;
-import Devices.Printer;
-import Devices.Router;
+import Devices.DeviceManager;
 import Process.Proces;
 import Queues.RealTimeQueue.RealTimeQueueScheduler;
 import Queues.UserJobQueue.MultilevelFeedbackQueueScheduler;
@@ -12,32 +9,27 @@ import Utils.Chronometer;
 import java.util.LinkedList;
 import java.util.concurrent.Semaphore;
 
-import Dispatcher.FileOperations.FileOperations;
 import Hardware.RAM;
 
 public class Dispatcher {
     MultilevelFeedbackQueueScheduler mfqs;
     RealTimeQueueScheduler fcfs;
     // Define system resources
-    Printer printer;
-    Browser browser;
-    Router router;
-    CD cd;
+    DeviceManager deviceManager;
     RAM _ram;
+    Chronometer chronometer;
 
     public Dispatcher() {
         mfqs = new MultilevelFeedbackQueueScheduler();
         fcfs = new RealTimeQueueScheduler();
-        printer = Printer.getInstance();
-        browser = Browser.getInstance();
-        router = Router.getInstance();
-        cd = CD.getInstance();
-        _ram = RAM.getInstance();
+        chronometer = Chronometer.getInstance();
+        deviceManager = DeviceManager.getInstance(); // device manager contains all static i/O devices
     }
 
-    public void dispatchProcesses(LinkedList<Proces> processList, Chronometer chronometer) {
+    public void dispatchProcesses(LinkedList<Proces> processList) {
         Thread triggerFCFS;
         Thread triggerMFQS;
+
         // Semaphore for concurrency
         Semaphore sem = new Semaphore(1);
         long firstTime = -1;
@@ -47,15 +39,11 @@ public class Dispatcher {
                 processList.forEach((proces -> {
                     // Check if process arrived
                     if (proces.getArrivalTime() == chronometer.getElapsedTime()) {
-                        if (proces.getPriority() == 0 && _ram.receiveMemory(proces)) {
-                            // Add to Real Time queue
-                            fcfs.addProcess(proces);
-                        } else if (proces.getPriority() > 0 && proces.getMemoryRequirement() <= 960) {
-                            // Add to MFQS queue
-                            mfqs.addProcess(proces, proces.getPriority() - 1);
+                        if (proces.getPriority() == 0 && proces.getMemoryRequirement() <= _ram.primary_memory_size) {
+                            fcfs.addProcess(proces); // Add to Real Time queue
+                        } else if (proces.getPriority() > 0 && proces.getMemoryRequirement() <= _ram.secondary_memory_size) {
+                            mfqs.addProcess(proces, proces.getPriority() - 1);// Add to MFQS queue
                         }
-
-
                     }
                 }));
                 fcfs.printStatus();
@@ -93,11 +81,5 @@ public class Dispatcher {
         }
     }
 
-    public void printStatus() {
-        System.out.println("Memory Available: " + _ram.getAvailableRam());
-        System.out.println("Printers Available: " + printer.availableResources());
-        System.out.println("Browser Available: " + browser.availableResources());
-        System.out.println("Router Available: " + router.availableResources());
-        System.out.println("CD Drivers Available: " + cd.availableResources());
-    }
+
 }
