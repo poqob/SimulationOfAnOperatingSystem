@@ -16,7 +16,7 @@ public class Browser extends ADevice {
         proces = new Proces[]{null};
     }
 
-    public Browser getInstance() {
+    public static Browser getInstance() {
         if (_instance == null)
             _instance = new Browser();
         return _instance;
@@ -41,4 +41,19 @@ public class Browser extends ADevice {
             return true;
         } else return false;
     }
+
+    @Override
+    public int availableResources() {
+        int count = 0;
+        for (boolean source : sources)
+            if (source)
+                count++;
+        return count;
+    }
+
+    @Override
+    public Proces[] getSourceOwners() {
+        return proces;
+    }
+
 }
