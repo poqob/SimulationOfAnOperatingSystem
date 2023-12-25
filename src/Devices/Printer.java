@@ -16,7 +16,7 @@ public class Printer extends ADevice {
         proces = new Proces[]{null, null};
     }
 
-    public Printer getInstance() {
+    public static Printer getInstance() {
         if (_instance == null)
             _instance = new Printer();
         return _instance;
@@ -48,5 +48,20 @@ public class Printer extends ADevice {
             sources[1] = false;
             return true;
         } else return false;
+    }
+
+
+    @Override
+    public int availableResources() {
+        int count = 0;
+        for (boolean source : sources)
+            if (source)
+                count++;
+        return count;
+    }
+
+    @Override
+    public Proces[] getSourceOwners() {
+        return proces;
     }
 }
