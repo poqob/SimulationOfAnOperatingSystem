@@ -15,7 +15,7 @@ public class CD extends ADevice {
         proces = new Proces[]{null, null};
     }
 
-    public CD getInstance() {
+    public static CD getInstance() {
         if (_instance == null)
             _instance = new CD();
         return _instance;
@@ -47,5 +47,20 @@ public class CD extends ADevice {
             sources[1] = false;
             return true;
         } else return false;
+    }
+
+
+    @Override
+    public int availableResources() {
+        int count = 0;
+        for (boolean source : sources)
+            if (source)
+                count++;
+        return count;
+    }
+
+    @Override
+    public Proces[] getSourceOwners() {
+        return proces;
     }
 }
