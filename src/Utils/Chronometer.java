@@ -2,6 +2,18 @@ package Utils;
 
 public class Chronometer {
 
+
+    private Chronometer() {
+    }
+
+    private static Chronometer _instance;
+
+    public static Chronometer getInstance() {
+        if (_instance == null)
+            _instance = new Chronometer();
+        return _instance;
+    }
+
     private long startTime = 0;
     private long elapsedTime = 0;
 
