@@ -17,7 +17,7 @@ public class Router extends ADevice {
         proces = new Proces[]{null};
     }
 
-    public Router getInstance() {
+    public static Router getInstance() {
         if (_instance == null)
             _instance = new Router();
         return _instance;
@@ -41,5 +41,20 @@ public class Router extends ADevice {
             sources[0] = false;
             return true;
         } else return false;
+    }
+
+
+    @Override
+    public int availableResources() {
+        int count = 0;
+        for (boolean source : sources)
+            if (source)
+                count++;
+        return count;
+    }
+
+    @Override
+    public Proces[] getSourceOwners() {
+        return proces;
     }
 }
