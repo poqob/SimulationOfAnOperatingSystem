@@ -21,10 +21,7 @@ public class Test {
         // Scheduler Test
         MultilevelFeedbackQueueScheduler mfqs = new MultilevelFeedbackQueueScheduler();
         RealTimeQueueScheduler fcfs = new RealTimeQueueScheduler();
-        Thread triggerFCFS;
-        Thread triggerMFQS;
-        // Semaphore for concurrency
-        Semaphore sem = new Semaphore(1);
+
         Chronometer chronometer = Chronometer.getInstance();
         int numberOfProcesses = fileOperations.numberOfProcesses();
         System.out.println("Total number of processes :" + numberOfProcesses);
@@ -50,34 +47,11 @@ public class Test {
                 }));
                 fcfs.printStatus();
                 mfqs.printStatus();
-                // Lock the semaphore
-                try {
-                    sem.acquire();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                // Trigger RealTime Scheduler in a new thread
-                triggerFCFS = new Thread() {
-                    @Override
-                    public void run() {
-                        fcfs.triggerScheduler(sem);
-                    }
-                };
-                triggerFCFS.start();
-                // Trigger MFQS in a new thread
-                triggerMFQS = new Thread() {
-                    @Override
-                    public void run() {
-                        mfqs.triggerScheduler(sem);
-                    }
-                };
-                triggerMFQS.start();
-                // Wait for threads to finish
-                try {
-                    triggerFCFS.join();
-                    triggerMFQS.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                // Trigger RealTime Scheduler
+                boolean realTime = fcfs.triggerScheduler();
+                // Trigger MFQS if fcfs is idle
+                if (!realTime) {
+                	mfqs.triggerScheduler();
                 }
             }
         }

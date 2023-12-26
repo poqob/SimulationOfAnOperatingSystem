@@ -14,20 +14,13 @@ public class RoundRobin {
     }
     
     // Run in Round Robin mode
-    public Queue<Proces> runScheduler(Queue<Proces> rrq, final Semaphore sem) {
+    public Queue<Proces> runScheduler(Queue<Proces> rrq) {
         // Get the head
         Proces task = rrq.poll();
         // check if ram is available
         // TODO: Do we controll device availability here??? DeviceManager.getInstance().isThereEnoughDeviceSource(task) -> boolean
         if (RAM.getInstance().receiveMemory(task)) {
             task.run();
-            try {
-                // Wait for the realtime scheduler to acquire resources
-                sem.acquire();
-            } catch (InterruptedException e1) {
-                e1.printStackTrace();
-            }
-            sem.release();
             // if needed sources are not available
     		/*
     		 *  // INTERRUPTED (2)

@@ -21,22 +21,20 @@ public class RealTimeQueueScheduler {
         realTimeQueue.add(task);
     }
 
-    public void triggerScheduler(final Semaphore sem) {
+    public boolean triggerScheduler() {
         if (!realTimeQueue.isEmpty()) {
-            runQueue(realTimeQueue, sem);
-            return;
+            runQueue(realTimeQueue);
+            return true;
         }
-        sem.release();
-        System.out.println("RealTimeQueue Scheduler is Idle for this time interval!");
+        return false;
     }
 
     // TODO: _ram.receiveMemory(task); // memmory allocation needed. Can you please allocate memory @OzturkVedat.
     // NOTE: [Mustafa] i read run queue but my brain
-    private void runQueue(LinkedList<Proces> fcfs, final Semaphore sem) {
+    private void runQueue(LinkedList<Proces> fcfs) {
         Proces task = fcfs.peek();    // Get the head
         task.run();
         // acquire needed resources here
-        sem.release();
         // wait for one time interval
         try {
             Thread.sleep(1000);

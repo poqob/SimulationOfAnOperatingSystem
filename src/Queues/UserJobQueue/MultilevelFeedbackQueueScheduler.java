@@ -39,15 +39,15 @@ public class MultilevelFeedbackQueueScheduler {
     }
 
     // This should be triggered by system timer on every interval (1 sec)
-    public void triggerScheduler(final Semaphore sem) {
+    public void triggerScheduler() {
         for (int i = 0; i < numberOfLevels; i++) {
             if (!queues[i].isEmpty()) {
             	if (i < 2) {
-                    runQueue(i, sem);
+                    runQueue(i);
             	}
             	else {
             		// Run in Round Robin mode
-            		queues[i] = RRQ.runScheduler(queues[i], sem);
+            		queues[i] = RRQ.runScheduler(queues[i]);
             	}
             	return;
             }
@@ -55,20 +55,13 @@ public class MultilevelFeedbackQueueScheduler {
         System.out.println("[Yetalit]: My Scheduler is Idle for this interval!");
     }
 
-    private void runQueue(int level, final Semaphore sem) {
+    private void runQueue(int level) {
         // Get the head
         Proces task = queues[level].poll();
         // check if ram is available
         // TODO: Do we controll device availability here??? DeviceManager.getInstance().isThereEnoughDeviceSource(task) -> boolean
         if (RAM.getInstance().receiveMemory(task)) {
             task.run();
-            try {
-                // Wait for the realtime scheduler to acquire resources
-                sem.acquire();
-            } catch (InterruptedException e1) {
-                e1.printStackTrace();
-            }
-            sem.release();
             // if needed sources are not available
     		/*
     		 *  // INTERRUPTED (2)
