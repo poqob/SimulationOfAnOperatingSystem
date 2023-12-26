@@ -19,12 +19,15 @@ public class MultilevelFeedbackQueueScheduler {
     private final int numberOfLevels;
     private final int[] timeQuantums;
     private final Queue<Proces>[] queues;
+    private final RoundRobin RRQ;
 
     public MultilevelFeedbackQueueScheduler() {
         numberOfLevels = 3;
         timeQuantums = new int[]{1, 1, 1};
         queues = new LinkedList[numberOfLevels];
-
+        // Round Robin Queue
+        RRQ = new RoundRobin(timeQuantums[numberOfLevels - 1]);
+        
         for (int i = 0; i < numberOfLevels; i++) {
             this.queues[i] = new LinkedList<>();
         }
@@ -39,9 +42,14 @@ public class MultilevelFeedbackQueueScheduler {
     public void triggerScheduler(final Semaphore sem) {
         for (int i = 0; i < numberOfLevels; i++) {
             if (!queues[i].isEmpty()) {
-                runQueue(i, sem);
-                // A higher queue has tasks in it. So do not check the rest of the queues.
-                return;
+            	if (i < 2) {
+                    runQueue(i, sem);
+            	}
+            	else {
+            		// Run in Round Robin mode
+            		queues[i] = RRQ.runScheduler(queues[i], sem);
+            	}
+            	return;
             }
         }
         System.out.println("[Yetalit]: My Scheduler is Idle for this interval!");
@@ -69,15 +77,13 @@ public class MultilevelFeedbackQueueScheduler {
     		 */
             // wait for the quantum of the current level
             try {
-                Thread.sleep(timeQuantums[level] * 10);
+                Thread.sleep(timeQuantums[level] * 1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             task.execute();
             if (task.getExecutionTime() > 0) {
-                if (level < 2) {
-                    level++;
-                }
+                level++;
                 // Add to the next queue
                 addProcess(task, level);
             } else {
@@ -89,9 +95,7 @@ public class MultilevelFeedbackQueueScheduler {
             }
         } else {
             task.interrupt();
-            if (level < 2) {
-                level++;
-            }
+            level++;
             // Add to the next queue
             addProcess(task, level);
             // INTERRUPTED (2)
