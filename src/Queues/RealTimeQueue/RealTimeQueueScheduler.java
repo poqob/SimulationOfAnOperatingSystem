@@ -29,12 +29,11 @@ public class RealTimeQueueScheduler {
         return false;
     }
 
-    // TODO: _ram.receiveMemory(task); // memmory allocation needed. Can you please allocate memory @OzturkVedat.
     // NOTE: [Mustafa] i read run queue but my brain
     private void runQueue(LinkedList<Proces> fcfs) {
         Proces task = fcfs.peek();    // Get the head
+        _ram.receiveMemory(task);
         task.run();
-        // acquire needed resources here
         // wait for one time interval
         try {
             Thread.sleep(1000);
@@ -46,7 +45,7 @@ public class RealTimeQueueScheduler {
             fcfs.set(0, task);        // update the first process of the queue
         } else {
             task = fcfs.pollFirst();        // discard the first process from the queue
-            RAM.getInstance().releaseMemory(task);
+            _ram.releaseMemory(task);
             task.done();
             FileOperations.doneProcessCount++;
             //cpu.releaseProcess(task, 3);

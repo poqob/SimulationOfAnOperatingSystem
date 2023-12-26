@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.Semaphore;
 
+import Devices.DeviceManager;
 import Dispatcher.FileOperations.FileOperations;
 import Process.Proces;
 import Hardware.*;
@@ -20,6 +21,7 @@ public class MultilevelFeedbackQueueScheduler {
     private final int[] timeQuantums;
     private final Queue<Proces>[] queues;
     private final RoundRobin RRQ;
+    RAM _ram;
 
     public MultilevelFeedbackQueueScheduler() {
         numberOfLevels = 3;
@@ -27,6 +29,7 @@ public class MultilevelFeedbackQueueScheduler {
         queues = new LinkedList[numberOfLevels];
         // Round Robin Queue
         RRQ = new RoundRobin(timeQuantums[numberOfLevels - 1]);
+        _ram = RAM.getInstance();
         
         for (int i = 0; i < numberOfLevels; i++) {
             this.queues[i] = new LinkedList<>();
@@ -58,16 +61,9 @@ public class MultilevelFeedbackQueueScheduler {
     private void runQueue(int level) {
         // Get the head
         Proces task = queues[level].poll();
-        // check if ram is available
-        // TODO: Do we controll device availability here??? DeviceManager.getInstance().isThereEnoughDeviceSource(task) -> boolean
-        if (RAM.getInstance().receiveMemory(task)) {
+        // check if resources are available
+        if (_ram.receiveMemory(task) && DeviceManager.getInstance().isThereEnoughDeviceSource(task)) {
             task.run();
-            // if needed sources are not available
-    		/*
-    		 *  // INTERRUPTED (2)
-                //cpu.releaseProcess(task, 2);
-            	return;
-    		 */
             // wait for the quantum of the current level
             try {
                 Thread.sleep(timeQuantums[level] * 1000);
@@ -80,7 +76,7 @@ public class MultilevelFeedbackQueueScheduler {
                 // Add to the next queue
                 addProcess(task, level);
             } else {
-                RAM.getInstance().releaseMemory(task);
+                _ram.releaseMemory(task);
                 task.done();
                 FileOperations.doneProcessCount++;
                 // DONE (3)

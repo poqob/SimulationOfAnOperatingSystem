@@ -44,9 +44,8 @@ public class Dispatcher {
                 fcfs.printStatus();
                 mfqs.printStatus();
                 // Trigger RealTime Scheduler
-                boolean realTime = fcfs.triggerScheduler();
-                // Trigger MFQS if fcfs is idle
-                if (!realTime) {
+                if (!fcfs.triggerScheduler()) {
+                    // Trigger MFQS if fcfs is idle
                 	mfqs.triggerScheduler();
                 }
             }
