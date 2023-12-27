@@ -14,8 +14,8 @@ public class Chronometer {
         return _instance;
     }
 
-    private long startTime = 0;
-    private long elapsedTime = 0;
+    private long startTime;
+    private long elapsedTime;
 
     public void start() {
         startTime = System.currentTimeMillis();

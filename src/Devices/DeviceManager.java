@@ -49,20 +49,24 @@ public class DeviceManager {
             int request = _map.get(key);
             switch (key) {
                 case Printer:
-                    if (printer.availableResources() < request)
+                    if (printer.availableResources() < request) {
                         return false;
+                    }
                     break;
                 case Browser:
-                    if (browser.availableResources() < request)
+                    if (browser.availableResources() < request) {
                         return false;
+                    }
                     break;
                 case CD:
-                    if (cd.availableResources() < request)
+                    if (cd.availableResources() < request) {
                         return false;
+                    }
                     break;
                 case Router:
-                    if (router.availableResources() < request)
+                    if (router.availableResources() < request) {
                         return false;
+                    }
                     break;
                 default:
                     break;

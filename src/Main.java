@@ -18,8 +18,9 @@ public class Main {
         Dispatcher dispatcher = new Dispatcher();
         chronometer.start();
         // Dispatch processes
-        dispatcher.dispatchProcesses(processList);
+        dispatcher.dispatchProcesses(processList, fileOperations.numberOfProcesses());
         // program end
         chronometer.stop();
+        System.out.println("No process left..");
     }
 }

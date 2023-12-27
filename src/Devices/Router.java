@@ -49,7 +49,7 @@ public class Router extends ADevice {
     public int availableResources() {
         int count = 0;
         for (boolean source : sources)
-            if (source)
+            if (!source)
                 count++;
         return count;
     }

@@ -20,7 +20,6 @@ public class Proces {
     final int scanners;
     final int modems;
     final int cdDrives;
-    boolean allocated;
 
     // process status
     EProcessStatus status;
@@ -44,7 +43,6 @@ public class Proces {
         this.scanners = scanners;
         this.modems = modems;
         this.cdDrives = cdDrives;
-        this.allocated = false;
         this.pid = pid;
     }
 
@@ -91,14 +89,6 @@ public class Proces {
 
     public int getPid() {
         return pid;
-    }
-
-    public boolean isAllocated() {
-        return allocated;
-    }
-
-    public void setAllocated(boolean value) {
-        allocated = value;
     }
 
     // get input/output requirements as a map.

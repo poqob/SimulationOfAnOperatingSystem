@@ -26,6 +26,7 @@ public class RealTimeQueueScheduler {
             runQueue(realTimeQueue);
             return true;
         }
+        System.out.println("RealTimeQueue Scheduler is Idle for this time interval!");
         return false;
     }
 

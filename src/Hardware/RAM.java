@@ -33,7 +33,6 @@ public class RAM extends AHardware {
     private boolean allocatePrimary(Proces process) {
         if (available_primary_memory_area >= process.getMemoryRequirement()) {
             available_primary_memory_area -= process.getMemoryRequirement();
-            process.setAllocated(true);
             return true;
         } else
             return false;
@@ -42,7 +41,6 @@ public class RAM extends AHardware {
     private boolean allocateSecondary(Proces process) {
         if (available_secondary_memory_area >= process.getMemoryRequirement()) {
             available_secondary_memory_area -= process.getMemoryRequirement();
-            process.setAllocated(true);
             return true;
         } else
             return false;
@@ -60,9 +58,6 @@ public class RAM extends AHardware {
 
 
     public boolean receiveMemory(Proces process) {
-        if (process.isAllocated()) {
-            return true;
-        }
         if (process.getPriority() == 0)
             return allocatePrimary(process);
         else
@@ -70,7 +65,6 @@ public class RAM extends AHardware {
     }
 
     public boolean releaseMemory(Proces process) {
-        process.setAllocated(false);
         if (process.getPriority() == 0)
             return freePrimary(process);
         else

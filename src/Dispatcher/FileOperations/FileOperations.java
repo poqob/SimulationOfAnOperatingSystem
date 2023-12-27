@@ -35,7 +35,7 @@ public class FileOperations {
         processList = new LinkedList<Proces>();
         _randList = new ArrayList<Integer>();
         random = new Random();
-        doneProcessCount=0;
+        doneProcessCount = 0;
     }
 
     private void _parseProcesses(String line) {
@@ -99,25 +99,7 @@ public class FileOperations {
     public LinkedList<Proces> getParsedProcesses() {
         return processList;
     }
-
-    /* public int getMaxOverallTime() {
-        int maxArrivalTime = 0;
-        int timerMax = 0;       // max time for the processes to be executed
     
-        for (Proces process : processList) {
-            int arrivalTime = process.getArrivalTime();
-            int executionTime = process.getExecutionTime();
-    
-            if (arrivalTime >= maxArrivalTime) {        // get the max arrival time from the list
-                maxArrivalTime = arrivalTime;
-    
-                if (executionTime + arrivalTime >= timerMax)       // get the max overall time from the processes
-                    timerMax = executionTime + arrivalTime;
-                
-            }
-        }
-        return timerMax;
-    } */
     public int numberOfProcesses(){
         int count=0;
         for(Proces proces : processList)
