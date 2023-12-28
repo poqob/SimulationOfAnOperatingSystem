@@ -46,9 +46,9 @@ public class Dispatcher {
                         // Get the required devices
                         Map<EDevices, Integer> ioMap = proces.getIORequirements();
                         // Check the priority and if our system can meet the needed resources
-                        if (proces.getPriority() == 0 && proces.getMemoryRequirement() <= RAM.getInstance().primary_memory_size && deviceManager.isThereEnoughDeviceSource(proces)) {
+                        if (proces.getPriority() == 0 && proces.getMemoryRequirement() <= RAM.getInstance().primary_memory_size && deviceManager.doesRecourcesMeetTheNeed(proces)) {
                             fcfs.addProcess(proces); // Add to Real Time queue
-                        } else if (proces.getPriority() > 0 && proces.getMemoryRequirement() <= RAM.getInstance().secondary_memory_size && deviceManager.isThereEnoughDeviceSource(proces)) {
+                        } else if (proces.getPriority() > 0 && proces.getMemoryRequirement() <= RAM.getInstance().secondary_memory_size && deviceManager.doesRecourcesMeetTheNeed(proces)) {
                             ujq.addProcess(proces); // Add to User Job Queue
                         } else
                             FileOperations.doneProcessCount++;      // if it's an invalid process, increase count regardless

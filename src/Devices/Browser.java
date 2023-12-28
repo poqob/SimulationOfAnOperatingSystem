@@ -6,6 +6,7 @@ public class Browser extends ADevice {
 
     // false(0) for available source.
     // true(1) for busy source.
+    public final int maximum_source = 1;
     boolean sources[];
 
     Proces proces[];
@@ -56,5 +57,6 @@ public class Browser extends ADevice {
     public Proces[] getSourceOwners() {
         return proces;
     }
+
 
 }

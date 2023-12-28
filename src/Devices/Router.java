@@ -11,6 +11,8 @@ public class Router extends ADevice {
 
     Proces proces[];
     private static Router _instance;
+    public final int maximum_source = 1;
+    
 
     private Router() {
         super(EDevices.Router);
