@@ -22,9 +22,7 @@ public class RealTimeQueueScheduler {
     }
 
     public boolean triggerScheduler() {
-    	// Check if there is any tasks
         if (!realTimeQueue.isEmpty()) {
-        	// Run the queue
             runQueue(realTimeQueue);
             return true;
         }
@@ -35,7 +33,7 @@ public class RealTimeQueueScheduler {
     // NOTE: [Mustafa] i read run queue but my brain
     private void runQueue(LinkedList<Proces> fcfs) {
         Proces task = fcfs.peek();    // Get the head
-        _ram.receiveMemory(task); // Receive the needed memory (if hasn't already)
+        _ram.receiveMemory(task);
         task.run();
         // wait for one time interval
         try {
@@ -47,9 +45,8 @@ public class RealTimeQueueScheduler {
         if (task.getExecutionTime() > 0) {
             fcfs.set(0, task);        // update the first process of the queue
         } else {
-        	// Task is done
             task = fcfs.pollFirst();        // discard the first process from the queue
-            _ram.releaseMemory(task); // Release taken memory
+            _ram.releaseMemory(task);
             task.done();
             FileOperations.doneProcessCount++;
             //cpu.releaseProcess(task, 3);

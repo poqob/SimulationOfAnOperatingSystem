@@ -19,7 +19,7 @@ public class RoundRobin {
         // Get the head
         Proces task = rrq.poll();
         task.run();
-        // wait for the time quantum
+        // wait for the quantum of the current level
         try {
             Thread.sleep(timeQuantum * 1000);
         } catch (InterruptedException e) {
@@ -31,15 +31,13 @@ public class RoundRobin {
             task.ready();
             rrq.add(task);
         } else {
-        	// Task is done
-            RAM.getInstance().releaseMemory(task); // Release taken memory
-            DeviceManager.getInstance().releaseDevices(task); // Release the taken devices
+            RAM.getInstance().releaseMemory(task);
+            DeviceManager.getInstance().releaseDevices(task);
             task.done();
             FileOperations.doneProcessCount++;
             // DONE (3)
             //cpu.releaseProcess(task, 3);
         }
-        // Return the executed queue to the scheduler
         return rrq;
     }
 }

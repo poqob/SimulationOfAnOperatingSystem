@@ -17,9 +17,7 @@ import java.util.concurrent.Semaphore;
 import Hardware.RAM;
 
 public class Dispatcher {
-	// User Job Queue
 	UserJobQueue ujq;
-	// Real Time Queue
     RealTimeQueueScheduler fcfs;
     // Define system resources
     DeviceManager deviceManager;
@@ -42,9 +40,7 @@ public class Dispatcher {
                 processList.forEach((proces -> {
                     // Check if process arrived
                     if (proces.getArrivalTime() == chronometer.getElapsedTime()) {
-                    	// Get the required devices
                     	Map<EDevices, Integer> ioMap = proces.getIORequirements();
-                    	// Check the priority and if our system can meet the needed resources
                         if (proces.getPriority() == 0 && proces.getMemoryRequirement() <= RAM.getInstance().primary_memory_size &&
                         		ioMap.get(EDevices.Printer) <= 2 &&
                         		ioMap.get(EDevices.Browser) <= 1 &&
@@ -56,7 +52,7 @@ public class Dispatcher {
                         		ioMap.get(EDevices.Browser) <= 1 &&
                         		ioMap.get(EDevices.Router) <= 1 &&
                         		ioMap.get(EDevices.CD) <= 2) {
-                        	ujq.addProcess(proces); // Add to User Job Queue
+                        	ujq.addProcess(proces);// Add to User Job Queue queue
                         } else
                             FileOperations.doneProcessCount++;      // if it's an invalid process, increase count regardless
                     }
