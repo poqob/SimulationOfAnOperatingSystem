@@ -5,4 +5,5 @@ public enum EProcessStatus {
     running,
     interrupted,
     done,
+    none,
 }
