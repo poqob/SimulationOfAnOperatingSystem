@@ -28,21 +28,26 @@ public class UserJobQueue {
             count++;
         while (count > 0) {
         	Proces process = queue.peek();
+        	// check if process hasn't exceeded 20 seconds limit
     		if (Chronometer.getInstance().getElapsedTime() - process.getArrivalTime() >= 20) {
+    			// Terminate the task
     			process.done();
     			FileOperations.doneProcessCount++;
     			System.out.println("Couldn't be finished within 20 seconds!");
     			queue.poll();
     		}
     		else {
+    			// If resources are available
     			if (DeviceManager.getInstance().isThereEnoughDeviceSource(process) && RAM.getInstance().receiveMemory(process)) {
-    				DeviceManager.getInstance().allocateDevices(process);
+    				DeviceManager.getInstance().allocateDevices(process); // Allocate needed devices
+    				// Add process to the MFQS
     				mfqs.addProcess(process, process.getPriority() - 1);
     				queue.poll();
     			}
     		}
     		count--;
         }
+        // Trigger the MFQS
 		mfqs.triggerScheduler(realTimeStatus);
 	}
 	

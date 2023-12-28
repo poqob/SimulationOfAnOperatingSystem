@@ -21,13 +21,13 @@ public class MultilevelFeedbackQueueScheduler {
     private final int numberOfLevels;
     private final int[] timeQuantums;
     private final Queue<Proces>[] queues;
+    // Round Robin Queue
     private final RoundRobin RRQ;
 
     public MultilevelFeedbackQueueScheduler() {
         numberOfLevels = 3;
         timeQuantums = new int[]{1, 1, 1};
         queues = new LinkedList[numberOfLevels];
-        // Round Robin Queue
         RRQ = new RoundRobin(timeQuantums[numberOfLevels - 1]);
         
         for (int i = 0; i < numberOfLevels; i++) {
@@ -43,6 +43,7 @@ public class MultilevelFeedbackQueueScheduler {
     // This should be triggered by system timer on every interval (1 sec)
     public void triggerScheduler(boolean realTimeStatus) {
         for (int i = 0; i < numberOfLevels; i++) {
+        	// Check if the queue has any tasks
             if (!queues[i].isEmpty()) {
             	// check if process hasn't exceeded 20 seconds limit
             	int count = 0;
@@ -51,8 +52,9 @@ public class MultilevelFeedbackQueueScheduler {
                 while (count > 0) {
                 	Proces process = queues[i].peek();
             		if (Chronometer.getInstance().getElapsedTime() - process.getArrivalTime() >= 20) {
-            	    	RAM.getInstance().releaseMemory(process);
-            	    	DeviceManager.getInstance().releaseDevices(process);
+            			// Terminate the task
+            	    	RAM.getInstance().releaseMemory(process); // Release taken memory
+            	    	DeviceManager.getInstance().releaseDevices(process); // Release the taken devices
             			process.done();
             			FileOperations.doneProcessCount++;
             			System.out.println("Couldn't be finished within 20 seconds!");
@@ -60,7 +62,9 @@ public class MultilevelFeedbackQueueScheduler {
             		}
             		count--;
                 }
+                // Check the survived tasks
             	if (!queues[i].isEmpty()) {
+            		// Check if Real Time scheduler is idle
             		if (!realTimeStatus) {
             			if (i < 2) {
             				runQueue(i);
@@ -71,9 +75,10 @@ public class MultilevelFeedbackQueueScheduler {
             			}
             		}
             		else {
+            			// Interrupt the user process
             			queues[i].peek().interrupt();
             		}
-            	return;
+            	return; // A higher level task got executed. So ignore the rest of the queues.
             	}
             }
         }
@@ -96,8 +101,9 @@ public class MultilevelFeedbackQueueScheduler {
             // Add to the next queue
             addProcess(task, level);
         } else {
-            RAM.getInstance().releaseMemory(task);
-            DeviceManager.getInstance().releaseDevices(task);
+        	// Task is done
+            RAM.getInstance().releaseMemory(task); // Release taken memory
+            DeviceManager.getInstance().releaseDevices(task); // Release the taken devices
             task.done();
             FileOperations.doneProcessCount++;
             // DONE (3)
