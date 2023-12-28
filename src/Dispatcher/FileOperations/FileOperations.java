@@ -42,7 +42,7 @@ public class FileOperations {
         Proces proces;
 
         // Split the string into an array of substrings using ","
-        String[] parts = line.replaceAll("\\s+","").split(",");
+        String[] parts = line.replaceAll("\\s+", "").split(",");
         // Create an array to store the parsed integers
         int[] processAttributes = new int[parts.length];
 
@@ -52,13 +52,13 @@ public class FileOperations {
 
         // create and add process
         proces = new Proces(pickRandom(), processAttributes[0], processAttributes[1], processAttributes[2],
-         processAttributes[3], processAttributes[4], processAttributes[5], processAttributes[6], processAttributes[7]);
+                processAttributes[3], processAttributes[4], processAttributes[5], processAttributes[6], processAttributes[7]);
         processList.add(proces);
 
     }
 
     private int pickRandom() {      // for picking a random pid
-        int val = random.nextInt();
+        int val = Math.abs(random.nextInt());
         if (_randList.contains(val))
             return pickRandom();
         _randList.add(val);
@@ -99,11 +99,11 @@ public class FileOperations {
     public LinkedList<Proces> getParsedProcesses() {
         return processList;
     }
-    
-    public int numberOfProcesses(){
-        int count=0;
-        for(Proces proces : processList)
+
+    public int numberOfProcesses() {
+        int count = 0;
+        for (Proces proces : processList)
             count++;
-        return count;     
+        return count;
     }
 }

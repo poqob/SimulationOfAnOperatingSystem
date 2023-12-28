@@ -9,6 +9,8 @@ public class CD extends ADevice {
 
     Proces proces[];
     private static CD _instance;
+    public final int maximum_source = 2;
+
 
     private CD() {
         super(EDevices.CD);

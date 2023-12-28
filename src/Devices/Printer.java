@@ -10,6 +10,7 @@ public class Printer extends ADevice {
 
     Proces proces[];
     private static Printer _instance;
+    public final int maximum_source = 2;
 
     private Printer() {
         super(EDevices.Printer);

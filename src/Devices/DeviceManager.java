@@ -75,6 +75,40 @@ public class DeviceManager {
         return true; // if all wanted sources were met then return true.
     }
 
+
+    public boolean doesRecourcesMeetTheNeed(Proces proces) {
+        Map<EDevices, Integer> _map = proces.getIORequirements();
+        // iterate over process source requirements.
+        for (EDevices key : _map.keySet()) {
+            int request = _map.get(key);
+            switch (key) {
+                case Printer:
+                    if (printer.maximum_source < request) {
+                        return false;
+                    }
+                    break;
+                case Browser:
+                    if (browser.maximum_source < request) {
+                        return false;
+                    }
+                    break;
+                case CD:
+                    if (cd.maximum_source < request) {
+                        return false;
+                    }
+                    break;
+                case Router:
+                    if (router.maximum_source < request) {
+                        return false;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        return true; // if all wanted sources were met then return true.
+    }
+
     // if availability okay then allocate devices.
     public void allocateDevices(Proces proces) {
         Map<EDevices, Integer> _map = proces.getIORequirements();

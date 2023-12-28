@@ -44,30 +44,31 @@ public class Proces {
         this.modems = modems;
         this.cdDrives = cdDrives;
         this.pid = pid;
+        this.status = EProcessStatus.none;
     }
 
     public void interrupt() {
         // implement process works.
         this.status = EProcessStatus.interrupted;
-        System.out.println("(" + pid + ") is interrupted!");
+        //System.out.println("(" + pid + ") is interrupted!");
     }
 
     public void ready() {
         // implement process works.
         this.status = EProcessStatus.ready;
-        System.out.println("(" + pid + ") is ready!");
+        //System.out.println("(" + pid + ") is ready!");
     }
 
     public void done() {
         // implement process works.
         this.status = EProcessStatus.done;
-        System.out.println("(" + pid + ") is done!");
+        //System.out.println("(" + pid + ") is done!");
     }
 
     public void run() {
         // implement process works.
         this.status = EProcessStatus.running;
-        System.out.println("(" + pid + ") is running!");
+        //System.out.println("(" + pid + ") is running!");
     }
 
     public void execute() {
@@ -99,5 +100,22 @@ public class Proces {
         map.put(EDevices.Printer, printers);
         map.put(EDevices.Router, modems);
         return map;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Proces{" +
+                "pid=" + pid +
+                ", arrivalTime=" + arrivalTime +
+                ", priority=" + priority +
+                ", executionTime=" + executionTime +
+                ", memoryRequirement=" + memoryRequirement +
+                ", printers=" + printers +
+                ", scanners=" + scanners +
+                ", modems=" + modems +
+                ", cdDrives=" + cdDrives +
+                ", status=" + status.name() +
+                '}';
     }
 }
