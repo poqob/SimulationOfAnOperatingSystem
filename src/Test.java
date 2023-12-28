@@ -3,6 +3,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.Semaphore;
 
+import Dispatcher.Ui.Ui;
 import Utils.Chronometer;
 import Process.Proces;
 import Devices.*;
@@ -35,25 +36,17 @@ public class Test {
                 a.forEach((proces -> {
                     // Check if process arrived
                     if (proces.getArrivalTime() == chronometer.getElapsedTime()) {
-                    	Map<EDevices, Integer> ioMap = proces.getIORequirements();
-                        if (proces.getPriority() == 0 && proces.getMemoryRequirement() <= RAM.getInstance().primary_memory_size &&
-                        		ioMap.get(EDevices.Printer) <= 2 &&
-                        		ioMap.get(EDevices.Browser) <= 1 &&
-                        		ioMap.get(EDevices.Router) <= 1 &&
-                        		ioMap.get(EDevices.CD) <= 2) {
+                        if (proces.getPriority() == 0 && proces.getMemoryRequirement() <= RAM.getInstance().primary_memory_size && DeviceManager.getInstance().isThereEnoughDeviceSource(proces)) {
                             fcfs.addProcess(proces); // Add to Real Time queue
-                        } else if (proces.getPriority() > 0 && proces.getMemoryRequirement() <= RAM.getInstance().secondary_memory_size &&
-                        		ioMap.get(EDevices.Printer) <= 2 &&
-                        		ioMap.get(EDevices.Browser) <= 1 &&
-                        		ioMap.get(EDevices.Router) <= 1 &&
-                        		ioMap.get(EDevices.CD) <= 2) {
-                        	ujq.addProcess(proces);// Add to User Job Queue queue
+                        } else if (proces.getPriority() > 0 && proces.getMemoryRequirement() <= RAM.getInstance().secondary_memory_size && DeviceManager.getInstance().isThereEnoughDeviceSource(proces)) {
+                            ujq.addProcess(proces);// Add to User Job Queue queue
                         } else
                             FileOperations.doneProcessCount++;      // if it's an invalid process, increase count regardless
                     }
                 }));
-                fcfs.printStatus();
-                ujq.printStatus();
+                Ui.getInstance().write(fcfs.getQueueAsAList());
+                Ui.getInstance().write(ujq.getQueueAsAList());
+
                 // Trigger Schedulers
                 ujq.trigger(fcfs.triggerScheduler());
             }
