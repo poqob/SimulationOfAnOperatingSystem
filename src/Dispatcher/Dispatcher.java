@@ -37,7 +37,7 @@ public class Dispatcher {
     public void dispatchProcesses(LinkedList<Proces> processList, int numberOfProcesses) {
         System.out.println("Total number of processes: " + numberOfProcesses);
         long firstTime = -1;
-        while (numberOfProcesses > FileOperations.doneProcessCount) {
+        while (numberOfProcesses > _ram.getDoneProcessCount()) {
             if (chronometer.getElapsedTime() - firstTime == 1) {
                 firstTime = chronometer.getElapsedTime();
                 processList.forEach((proces -> {
@@ -51,11 +51,11 @@ public class Dispatcher {
                         } else if (proces.getPriority() > 0 && proces.getMemoryRequirement() <= RAM.getInstance().secondary_memory_size && deviceManager.doesRecourcesMeetTheNeed(proces)) {
                             ujq.addProcess(proces); // Add to User Job Queue
                         } else
-                            FileOperations.doneProcessCount++;      // if it's an invalid process, increase count regardless
+                            _ram.increaseDoneProcessCountRegardless();      // if it's an invalid process, increase count regardless
                     }
                 }));
-                fcfs.printStatus();
-                ujq.printStatus();
+                //fcfs.printStatus();
+                //ujq.printStatus();
                 Ui.getInstance().write(fcfs.getQueueAsAList());
                 Ui.getInstance().write(ujq.getQueueAsAList());
                 // Trigger Schedulers

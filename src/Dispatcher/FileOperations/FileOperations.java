@@ -27,7 +27,6 @@ public class FileOperations {
     private ArrayList<Integer> _randList;
 
     private Random random;
-    public static int doneProcessCount;
     private static FileOperations _instance;
 
     // methods
@@ -35,7 +34,6 @@ public class FileOperations {
         processList = new LinkedList<Proces>();
         _randList = new ArrayList<Integer>();
         random = new Random();
-        doneProcessCount = 0;
     }
 
     private void _parseProcesses(String line) {

@@ -1,7 +1,9 @@
 package Queues.UserJobQueue;
+
+import Hardware.Processor;
 import Process.Proces;
+
 import java.util.Queue;
-import java.util.concurrent.Semaphore;
 
 import Devices.DeviceManager;
 import Dispatcher.FileOperations.FileOperations;
@@ -13,7 +15,7 @@ public class RoundRobin {
     public RoundRobin(int timeQuantum) {
         this.timeQuantum = timeQuantum;
     }
-    
+
     // Run in Round Robin mode
     public Queue<Proces> runScheduler(Queue<Proces> rrq) {
         // Get the head
@@ -31,12 +33,7 @@ public class RoundRobin {
             task.ready();
             rrq.add(task);
         } else {
-            RAM.getInstance().releaseMemory(task);
-            DeviceManager.getInstance().releaseDevices(task);
-            task.done();
-            FileOperations.doneProcessCount++;
-            // DONE (3)
-            //cpu.releaseProcess(task, 3);
+            Processor.process(task);
         }
         return rrq;
     }

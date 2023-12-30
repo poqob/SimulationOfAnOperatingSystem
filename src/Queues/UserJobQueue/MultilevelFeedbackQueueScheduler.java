@@ -29,7 +29,7 @@ public class MultilevelFeedbackQueueScheduler {
         queues = new LinkedList[numberOfLevels];
         // Round Robin Queue
         RRQ = new RoundRobin(timeQuantums[numberOfLevels - 1]);
-        
+
         for (int i = 0; i < numberOfLevels; i++) {
             this.queues[i] = new LinkedList<>();
         }
@@ -44,37 +44,32 @@ public class MultilevelFeedbackQueueScheduler {
     public void triggerScheduler(boolean realTimeStatus) {
         for (int i = 0; i < numberOfLevels; i++) {
             if (!queues[i].isEmpty()) {
-            	// check if process hasn't exceeded 20 seconds limit
-            	int count = 0;
-                for(Proces proces : queues[i])
+                // check if process hasn't exceeded 20 seconds limit
+                int count = 0;
+                for (Proces proces : queues[i])
                     count++;
                 while (count > 0) {
-                	Proces process = queues[i].peek();
-            		if (Chronometer.getInstance().getElapsedTime() - process.getArrivalTime() >= 20) {
-            	    	RAM.getInstance().releaseMemory(process);
-            	    	DeviceManager.getInstance().releaseDevices(process);
-            			process.done();
-            			FileOperations.doneProcessCount++;
-            			System.out.println("Couldn't be finished within 20 seconds!");
-            			queues[i].poll();
-            		}
-            		count--;
+                    Proces process = queues[i].peek();
+                    if (Chronometer.getInstance().getElapsedTime() - process.getArrivalTime() >= 20) {
+                        Processor.process(process);
+                        System.out.println("Couldn't be finished within 20 seconds!");
+                        queues[i].poll();
+                    }
+                    count--;
                 }
-            	if (!queues[i].isEmpty()) {
-            		if (!realTimeStatus) {
-            			if (i < 2) {
-            				runQueue(i);
-            			}
-            			else {
-            				// Run in Round Robin mode
-            				queues[i] = RRQ.runScheduler(queues[i]);
-            			}
-            		}
-            		else {
-            			queues[i].peek().interrupt();
-            		}
-            	return;
-            	}
+                if (!queues[i].isEmpty()) {
+                    if (!realTimeStatus) {
+                        if (i < 2) {
+                            runQueue(i);
+                        } else {
+                            // Run in Round Robin mode
+                            queues[i] = RRQ.runScheduler(queues[i]);
+                        }
+                    } else {
+                        queues[i].peek().interrupt();
+                    }
+                    return;
+                }
             }
         }
         System.out.println("MFQS is Idle for this interval!");
@@ -96,12 +91,7 @@ public class MultilevelFeedbackQueueScheduler {
             // Add to the next queue
             addProcess(task, level);
         } else {
-            RAM.getInstance().releaseMemory(task);
-            DeviceManager.getInstance().releaseDevices(task);
-            task.done();
-            FileOperations.doneProcessCount++;
-            // DONE (3)
-            //cpu.releaseProcess(task, 3);
+            Processor.process(task);
         }
     }
 

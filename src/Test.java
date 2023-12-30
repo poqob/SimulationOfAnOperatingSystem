@@ -30,7 +30,7 @@ public class Test {
 
         chronometer.start();
         long firstTime = -1;
-        while (numberOfProcesses > FileOperations.doneProcessCount) {
+        while (numberOfProcesses > RAM.getInstance().getDoneProcessCount()) {
             if (chronometer.getElapsedTime() - firstTime == 1) {
                 firstTime = chronometer.getElapsedTime();
                 a.forEach((proces -> {
@@ -41,7 +41,7 @@ public class Test {
                         } else if (proces.getPriority() > 0 && proces.getMemoryRequirement() <= RAM.getInstance().secondary_memory_size && DeviceManager.getInstance().isThereEnoughDeviceSource(proces)) {
                             ujq.addProcess(proces);// Add to User Job Queue queue
                         } else
-                            FileOperations.doneProcessCount++;      // if it's an invalid process, increase count regardless
+                            RAM.getInstance().increaseDoneProcessCountRegardless();     // if it's an invalid process, increase count regardless
                     }
                 }));
                 Ui.getInstance().write(fcfs.getQueueAsAList());

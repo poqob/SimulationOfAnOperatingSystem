@@ -18,10 +18,13 @@ public class RAM extends AHardware {
     public final int primary_memory_size = 64;
     public final int secondary_memory_size = 960;
 
+    public static int doneProcessCount;
+
     // private constructor
     private RAM() {
         available_primary_memory_area = primary_memory_size;
         available_secondary_memory_area = secondary_memory_size;
+        doneProcessCount = 0;
     }
 
     public static RAM getInstance() {
@@ -65,10 +68,19 @@ public class RAM extends AHardware {
     }
 
     public boolean releaseMemory(Proces process) {
+        doneProcessCount++;
         if (process.getPriority() == 0)
             return freePrimary(process);
         else
             return freeSecondary(process);
+    }
+
+    public int getDoneProcessCount() {
+        return doneProcessCount;
+    }
+
+    public void increaseDoneProcessCountRegardless() {
+        doneProcessCount++;
     }
 
 
