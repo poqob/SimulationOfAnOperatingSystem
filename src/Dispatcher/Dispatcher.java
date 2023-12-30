@@ -31,6 +31,7 @@ public class Dispatcher {
         ujq = new UserJobQueue();
         fcfs = new RealTimeQueueScheduler();
         chronometer = Chronometer.getInstance();
+        _ram = RAM.getInstance();
         deviceManager = DeviceManager.getInstance(); // device manager contains all static i/O devices
     }
 
@@ -46,9 +47,9 @@ public class Dispatcher {
                         // Get the required devices
                         Map<EDevices, Integer> ioMap = proces.getIORequirements();
                         // Check the priority and if our system can meet the needed resources
-                        if (proces.getPriority() == 0 && proces.getMemoryRequirement() <= RAM.getInstance().primary_memory_size && deviceManager.doesRecourcesMeetTheNeed(proces)) {
+                        if (proces.getPriority() == 0 && proces.getMemoryRequirement() <= _ram.primary_memory_size && deviceManager.doesRecourcesMeetTheNeed(proces)) {
                             fcfs.addProcess(proces); // Add to Real Time queue
-                        } else if (proces.getPriority() > 0 && proces.getMemoryRequirement() <= RAM.getInstance().secondary_memory_size && deviceManager.doesRecourcesMeetTheNeed(proces)) {
+                        } else if (proces.getPriority() > 0 && proces.getMemoryRequirement() <= _ram.secondary_memory_size && deviceManager.doesRecourcesMeetTheNeed(proces)) {
                             ujq.addProcess(proces); // Add to User Job Queue
                         } else
                             _ram.increaseDoneProcessCountRegardless();      // if it's an invalid process, increase count regardless

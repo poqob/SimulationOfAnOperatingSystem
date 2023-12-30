@@ -33,7 +33,8 @@ public class UserJobQueue {
             // check if process hasn't exceeded 20 seconds limit
             if (Chronometer.getInstance().getElapsedTime() - process.getArrivalTime() >= 20) {
                 // Terminate the task
-                Processor.process(process); // ? do i need to write a terminate method??
+            	process.done();
+                RAM.getInstance().doneProcessCount++;
                 System.out.println("Couldn't be finished within 20 seconds!");
                 queue.poll();
             } else {
