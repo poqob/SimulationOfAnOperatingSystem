@@ -18,9 +18,9 @@ import java.util.concurrent.Semaphore;
 import Hardware.RAM;
 
 public class Dispatcher {
-    // User Job Queue
+    // User Job Queue(kuyrugu)
     UserJobQueue ujq;
-    // Real Time Queue
+    // Real Time Queue(kuyrugu)
     RealTimeQueueScheduler fcfs;
     // sistem kaynaklarini tanimla
     DeviceManager deviceManager;
@@ -36,6 +36,7 @@ public class Dispatcher {
     }
 
     public void dispatchProcesses(LinkedList<Proces> processList, int numberOfProcesses) {
+        chronometer.start();
         System.out.println("Total number of processes: " + numberOfProcesses);
         long firstTime = -1;
         while (numberOfProcesses > _ram.getDoneProcessCount()) {
@@ -55,8 +56,6 @@ public class Dispatcher {
                             _ram.increaseDoneProcessCountRegardless();      // process gecersizse bile sayaci arttir
                     }
                 }));
-                //fcfs.printStatus();
-                //ujq.printStatus();
                 Ui.getInstance().write(fcfs.getQueueAsAList());
                 Ui.getInstance().write(ujq.getQueueAsAList());
                 // cizelgeliyicileri tetikle

@@ -1,26 +1,21 @@
-import java.io.Console;
 import java.util.LinkedList;
 
 import Process.Proces;
 import Dispatcher.FileOperations.FileOperations;
-import Utils.Chronometer;
 import Dispatcher.Dispatcher;
 
 public class Main {
     public static void main(String[] args) {
-        Chronometer chronometer = Chronometer.getInstance(); // <- its our time guys. to get program time, chronometer.getElapsedTime();
         FileOperations fileOperations = FileOperations.getInstance();
         LinkedList<Proces> processList;
-        // program start
+        // program baslasin
         fileOperations.readFile();
         processList = fileOperations.getParsedProcesses(); //@Mustafa: guys, our parsed processes are this.
-        // create dispatcher
+        // gorevlendirici yaratilsin
         Dispatcher dispatcher = new Dispatcher();
-        chronometer.start();
-        // Dispatch processes
+        // gorevlendirici calissin
         dispatcher.dispatchProcesses(processList, fileOperations.numberOfProcesses());
-        // program end
-        chronometer.stop();
+        // program sonlandi
         System.out.println("No process left..");
     }
 }

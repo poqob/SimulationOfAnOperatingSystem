@@ -1,10 +1,12 @@
 package Dispatcher.Ui;
 
+// boyalar enum
 enum Colors {
     RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE,
 }
 
 
+// boya cek sinifi.
 public class Color {
     private static Colors colour = Colors.WHITE;
 

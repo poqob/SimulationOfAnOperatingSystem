@@ -3,7 +3,7 @@ package Hardware;
 import Devices.DeviceManager;
 import Process.Proces;
 
-// TODO: processing(Proces process, Time time): waits while given time then sends proceed process to dispatcher.
+// islemci simulasyon sinifi.
 public class Processor extends AHardware {
     private static RAM _ram;
 
