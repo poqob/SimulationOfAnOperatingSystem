@@ -16,12 +16,12 @@ public class RoundRobin {
         this.timeQuantum = timeQuantum;
     }
 
-    // Run in Round Robin mode
-    public Queue<Proces> runScheduler(Queue<Proces> rrq) {
-        // Get the head
+        // Round Robin olarak yurut
+        public Queue<Proces> runScheduler(Queue<Proces> rrq) {
+        // kuyrugun basindakini getir
         Proces task = rrq.poll();
         task.run();
-        // wait for the quantum of the current level
+        // kuyruk seviyesinin kuantum suresince bekle
         try {
             Thread.sleep(timeQuantum * 1000);
         } catch (InterruptedException e) {
@@ -29,7 +29,7 @@ public class RoundRobin {
         }
         task.execute();
         if (task.getExecutionTime() > 0) {
-            // Add to the queue
+            // kuyruga ekle
             task.ready();
             rrq.add(task);
         } else {

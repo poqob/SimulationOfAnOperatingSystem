@@ -3,8 +3,8 @@ package Devices;
 import Process.Proces;
 
 public class CD extends ADevice {
-    // false(0) for available source.
-    // true(1) for busy source.
+    // kaynak bostaysa false(0)
+    // kaynak doluysa true(1)
     boolean sources[];
 
     Proces proces[];
@@ -24,7 +24,7 @@ public class CD extends ADevice {
         return _instance;
     }
 
-    // @return true if request success, else false.
+     // istek basariliysa true dondur
     @Override
     public boolean allocate(Proces process) {
         if (proces[0] == null) {
@@ -38,7 +38,7 @@ public class CD extends ADevice {
         } else return false;
     }
 
-    // @return true if request success, else false.
+      // istek basariliysa true dondur
     @Override
     public boolean release(Proces process) {
         if (proces[0] == process) {

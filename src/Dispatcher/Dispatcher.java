@@ -22,7 +22,7 @@ public class Dispatcher {
     UserJobQueue ujq;
     // Real Time Queue
     RealTimeQueueScheduler fcfs;
-    // Define system resources
+    // sistem kaynaklarini tanimla
     DeviceManager deviceManager;
     RAM _ram;
     Chronometer chronometer;
@@ -32,7 +32,7 @@ public class Dispatcher {
         fcfs = new RealTimeQueueScheduler();
         chronometer = Chronometer.getInstance();
         _ram = RAM.getInstance();
-        deviceManager = DeviceManager.getInstance(); // device manager contains all static i/O devices
+        deviceManager = DeviceManager.getInstance(); // device manager tum static i/o kaynaklarini kapsar
     }
 
     public void dispatchProcesses(LinkedList<Proces> processList, int numberOfProcesses) {
@@ -42,24 +42,24 @@ public class Dispatcher {
             if (chronometer.getElapsedTime() - firstTime == 1) {
                 firstTime = chronometer.getElapsedTime();
                 processList.forEach((proces -> {
-                    // Check if process arrived
+                    // proses geldi mi diye bak(arrivalTime)
                     if (proces.getArrivalTime() == chronometer.getElapsedTime()) {
-                        // Get the required devices
+                        // gerekli kaynaklari isgal et
                         Map<EDevices, Integer> ioMap = proces.getIORequirements();
-                        // Check the priority and if our system can meet the needed resources
+                        // onceliği ve kaynaklarin uygunlugunu kontrol et
                         if (proces.getPriority() == 0 && proces.getMemoryRequirement() <= _ram.primary_memory_size && deviceManager.doesRecourcesMeetTheNeed(proces)) {
-                            fcfs.addProcess(proces); // Add to Real Time queue
+                            fcfs.addProcess(proces); // Real Time queue ekle
                         } else if (proces.getPriority() > 0 && proces.getMemoryRequirement() <= _ram.secondary_memory_size && deviceManager.doesRecourcesMeetTheNeed(proces)) {
-                            ujq.addProcess(proces); // Add to User Job Queue
+                            ujq.addProcess(proces); // User Job Queue ekle
                         } else
-                            _ram.increaseDoneProcessCountRegardless();      // if it's an invalid process, increase count regardless
+                            _ram.increaseDoneProcessCountRegardless();      // process gecersizse bile sayaci arttir
                     }
                 }));
                 //fcfs.printStatus();
                 //ujq.printStatus();
                 Ui.getInstance().write(fcfs.getQueueAsAList());
                 Ui.getInstance().write(ujq.getQueueAsAList());
-                // Trigger Schedulers
+                // cizelgeliyicileri tetikle
                 ujq.trigger(fcfs.triggerScheduler());
             }
         }

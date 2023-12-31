@@ -19,7 +19,7 @@ public class RealTimeQueueScheduler {
     }
 
     public void addProcess(Proces task) {
-        if(task.getExecutionTime() < 20){
+        if(task.getExecutionTime() < 20){     // proses 20sn limitini asiyor mu kontrol et
         task.ready();
         realTimeQueue.add(task);
     }else
@@ -27,9 +27,9 @@ public class RealTimeQueueScheduler {
     }
 
     public boolean triggerScheduler() {
-        // Check if there is any tasks
+        // kuyrukta proses var mi kontrol et
         if (!realTimeQueue.isEmpty()) {
-            // Run the queue
+            // kuyrugu yurut
             runQueue(realTimeQueue);
             return true;
         }
@@ -39,10 +39,10 @@ public class RealTimeQueueScheduler {
 
 
     private void runQueue(LinkedList<Proces> fcfs) {
-        Proces task = fcfs.peek();    // Get the head
-        _ram.receiveMemory(task); // Receive the needed memory (if hasn't already)
+        Proces task = fcfs.peek();    // kuyrugun basindaki prosesi getir
+        _ram.receiveMemory(task);   // gerekli bellekte alan ayir
         task.run();
-        // wait for one time interval
+        // bir zaman araliginca bekle
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -50,10 +50,10 @@ public class RealTimeQueueScheduler {
         }
         task.execute();
         if (task.getExecutionTime() > 0) {
-            fcfs.set(0, task);        // update the first process of the queue
+            fcfs.set(0, task);        // kuyrugun basindaki prosesi guncelle
         } else {
             // Task is done
-            task = fcfs.pollFirst();        // discard the first process from the queue
+            task = fcfs.pollFirst();        // proses icrasi bittiyse kuyruktan kaldir, bellegi iade et
             _processor.process(task);
         }
     }

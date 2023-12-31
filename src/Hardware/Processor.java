@@ -22,7 +22,7 @@ public class Processor extends AHardware {
 
 
     public static Proces process(Proces proces) {
-        // think we proceed process then release memory.
+        // proses kaynaklarinin iadesini sagla
         proces.done();
         DeviceManager.getInstance().releaseDevices(proces);
         _ram.releaseMemory(proces);

@@ -7,10 +7,10 @@ import Process.Proces;
 public class RAM extends AHardware {
 
 
-    // available memories.
-    // if incoming process's priority level is 0 then allocate primary memory area.
+    // belleklerimiz
+    // onceligi 0 olan bir proses ise primary memory'den alan ayir
     private static int available_primary_memory_area;
-    // if incoming process's priority level isn't 0 then allocate secondary memory area.
+    // eger 0 degilse secondary memory'den alan ayir
     private static int available_secondary_memory_area;
     // RAM instance
     private static RAM _instance;

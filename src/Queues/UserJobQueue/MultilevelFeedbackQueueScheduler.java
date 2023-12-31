@@ -40,11 +40,11 @@ public class MultilevelFeedbackQueueScheduler {
         queues[level].add(task);
     }
 
-    // This should be triggered by system timer on every interval (1 sec)
+    // Zamanlayici tarafindan her zaman araliginda(1sn) tetiklenmeli
     public void triggerScheduler(boolean realTimeStatus) {
         for (int i = 0; i < numberOfLevels; i++) {
             if (!queues[i].isEmpty()) {
-                // check if process hasn't exceeded 20 seconds limit
+                // proses 20sn limitini asiyor mu kontrol et
                 int count = 0;
                 for (Proces proces : queues[i])
                     count++;
@@ -62,7 +62,7 @@ public class MultilevelFeedbackQueueScheduler {
                         if (i < 2) {
                             runQueue(i);
                         } else {
-                            // Run in Round Robin mode
+                            // Round Robin olarak yurut
                             queues[i] = RRQ.runScheduler(queues[i]);
                         }
                     } else {
@@ -76,10 +76,10 @@ public class MultilevelFeedbackQueueScheduler {
     }
 
     private void runQueue(int level) {
-        // Get the head
+        // kuyrugun basindakini getir
         Proces task = queues[level].poll();
         task.run();
-        // wait for the quantum of the current level
+        // kuyruk seviyesinin kuantum suresince bekle
         try {
             Thread.sleep(timeQuantums[level] * 1000);
         } catch (InterruptedException e) {
@@ -88,7 +88,7 @@ public class MultilevelFeedbackQueueScheduler {
         task.execute();
         if (task.getExecutionTime() > 0) {
             level++;
-            // Add to the next queue
+            // Alt kuyruga aktar
             addProcess(task, level);
         } else {
             Processor.process(task);

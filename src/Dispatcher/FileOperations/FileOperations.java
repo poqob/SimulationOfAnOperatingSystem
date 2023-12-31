@@ -19,7 +19,7 @@ import java.util.Random;
 arival time, priority, process time, Mbayt, printer, browser, router, cd;
  * */
 public class FileOperations {
-    // fields
+    // alanlar
     final private String directory = "";
     final private String fileName = "entry.txt";
     private LinkedList<Proces> processList;
@@ -29,7 +29,7 @@ public class FileOperations {
     private Random random;
     private static FileOperations _instance;
 
-    // methods
+    // metotlar
     private FileOperations() {
         processList = new LinkedList<Proces>();
         _randList = new ArrayList<Integer>();
@@ -39,23 +39,23 @@ public class FileOperations {
     private void _parseProcesses(String line) {
         Proces proces;
 
-        // Split the string into an array of substrings using ","
+        // string'leri substring'lere bolup bir array'e at
         String[] parts = line.replaceAll("\\s+", "").split(",");
-        // Create an array to store the parsed integers
+        // proseslerin degerlerini atacagimiz array
         int[] processAttributes = new int[parts.length];
 
-        // Parse each substring into an integer
+        // her substring'i integer'a cevir
         for (int i = 0; i < parts.length; i++)
             processAttributes[i] = Integer.parseInt(parts[i]);
 
-        // create and add process
+        // process olustur ve listeye ekle
         proces = new Proces(pickRandom(), processAttributes[0], processAttributes[1], processAttributes[2],
                 processAttributes[3], processAttributes[4], processAttributes[5], processAttributes[6], processAttributes[7]);
         processList.add(proces);
 
     }
 
-    private int pickRandom() {      // for picking a random pid
+    private int pickRandom() {      // rastgele bir pid almak icin
         int val = Math.abs(random.nextInt());
         if (_randList.contains(val))
             return pickRandom();
@@ -73,16 +73,16 @@ public class FileOperations {
         String line;
         Path filePath = Paths.get(directory, fileName);
 
-        // Check if the file exists before attempting to read it
+        // Dosya var mi kontrol et
         if (Files.exists(filePath)) {
             try {
-                // Open the file using BufferedReader
+                // BufferedReader ile dosyayi ac
                 BufferedReader reader = Files.newBufferedReader(filePath);
-                // Read the file line by line
+                // dosyayi satir satir oku
                 while ((line = reader.readLine()) != null) {
-                    _parseProcesses(line); // parse each line.
+                    _parseProcesses(line); // her satiri prosese cevir
                 }
-                // Close the BufferedReader
+                // BufferedReader'i kapat
                 reader.close();
             } catch (Exception e) {
                 e.printStackTrace();

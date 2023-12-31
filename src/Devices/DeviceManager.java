@@ -7,16 +7,16 @@ import Hardware.RAM;
 import Process.Proces;
 
 public class DeviceManager {
-    // devices
+    // kaynaklar
     Printer printer;
     Browser browser;
     Router router;
     CD cd;
     RAM _ram;
-    // device list
+    // kaynak listesi
     LinkedList<ADevice> devices;
 
-    // singleton architecture
+    // singleton mimari
     private static DeviceManager _instance;
 
     // private constructor.
@@ -41,10 +41,10 @@ public class DeviceManager {
         return _instance;
     }
 
-    // it is device source controller method. that takes process as parameter and turns source availability situation.
+    // proses icin kaynaklarin uygunlugunu kontroler eden method. Kaynaklar musaitse true dondurur
     public boolean isThereEnoughDeviceSource(Proces proces) {
         Map<EDevices, Integer> _map = proces.getIORequirements();
-        // iterate over process source requirements.
+        // prosesin kaynak ihtiyaclarini tek tek kontrol et
         for (EDevices key : _map.keySet()) {
             int request = _map.get(key);
             switch (key) {
@@ -72,13 +72,13 @@ public class DeviceManager {
                     break;
             }
         }
-        return true; // if all wanted sources were met then return true.
-    }
+        return true;        // istenen her kaynak musaitse true dondur
+    } 
 
 
     public boolean doesRecourcesMeetTheNeed(Proces proces) {
         Map<EDevices, Integer> _map = proces.getIORequirements();
-        // iterate over process source requirements.
+        // prosesin kaynak ihtiyaclarini tek tek kontrol et
         for (EDevices key : _map.keySet()) {
             int request = _map.get(key);
             switch (key) {
@@ -106,13 +106,13 @@ public class DeviceManager {
                     break;
             }
         }
-        return true; // if all wanted sources were met then return true.
+        return true;   // istenen her kaynak musaitse true dondur
     }
 
-    // if availability okay then allocate devices.
+    // kaynaklar uygunsa istenen kaynaklari prosese teslim et
     public void allocateDevices(Proces proces) {
         Map<EDevices, Integer> _map = proces.getIORequirements();
-        // iterate over process source requirements.
+        // prosesin kaynak ihtiyaclarini tek tek kontrol et
         for (EDevices key : _map.keySet()) {
             switch (key) {
                 case Printer:
@@ -134,10 +134,9 @@ public class DeviceManager {
     }
 
 
-    // release devices.
+    // kaynaklari iade et
     public void releaseDevices(Proces proces) {
         Map<EDevices, Integer> _map = proces.getIORequirements();
-        // iterate over process source requirements.
         for (EDevices key : _map.keySet()) {
             switch (key) {
                 case Printer:

@@ -23,7 +23,7 @@ public class Chronometer {
 
     public void stop() {
         long currentTime = System.currentTimeMillis();
-        elapsedTime = (currentTime - startTime) / 1000; // Convert milliseconds to seconds
+        elapsedTime = (currentTime - startTime) / 1000;     // milisaniyeden saniyeye cevrim
     }
 
     public void reset() {

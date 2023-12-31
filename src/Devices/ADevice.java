@@ -2,7 +2,7 @@ package Devices;
 
 import Process.Proces;
 
-/// All devices will be derived from ADevice class. Override methods.
+/// Tum device siniflari bu abstract siniftan tureyecektir
 public abstract class ADevice {
     public final EDevices deviceType;
 

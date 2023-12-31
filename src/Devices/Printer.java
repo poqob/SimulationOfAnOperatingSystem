@@ -4,8 +4,8 @@ import Process.Proces;
 
 public class Printer extends ADevice {
 
-    // false(0) for available source.
-    // true(1) for busy source.
+    // kaynak bostaysa false(0)
+    // kaynak doluysa true(1)
     boolean sources[];
 
     Proces proces[];
@@ -14,8 +14,8 @@ public class Printer extends ADevice {
 
     private Printer() {
         super(EDevices.Printer);
-        sources = new boolean[]{false, false};
-        proces = new Proces[]{null, null};
+        sources = new boolean[] { false, false };
+        proces = new Proces[] { null, null };
     }
 
     public static Printer getInstance() {
@@ -24,7 +24,7 @@ public class Printer extends ADevice {
         return _instance;
     }
 
-    // @return true if request success, else false.
+    // istek basariliysa true dondur
     @Override
     public boolean allocate(Proces process) {
         if (proces[0] == null) {
@@ -35,10 +35,11 @@ public class Printer extends ADevice {
             proces[1] = process;
             sources[1] = true;
             return true;
-        } else return false;
+        } else
+            return false;
     }
 
-    // @return true if request success, else false.
+    // istek basariliysa true dondur
     @Override
     public boolean release(Proces process) {
         if (proces[0] == process) {
@@ -49,9 +50,9 @@ public class Printer extends ADevice {
             proces[1] = null;
             sources[1] = false;
             return true;
-        } else return false;
+        } else
+            return false;
     }
-
 
     @Override
     public int availableResources() {

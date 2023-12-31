@@ -30,25 +30,25 @@ public class UserJobQueue {
             count++;
         while (count > 0) {
             Proces process = queue.peek();
-            // check if process hasn't exceeded 20 seconds limit
+            // proses 20sn limitini asiyor mu kontrol et
             if (Chronometer.getInstance().getElapsedTime() - process.getArrivalTime() >= 20) {
-                // Terminate the task
+                // prosesi yok et
             	process.done();
                 RAM.getInstance().doneProcessCount++;
                 System.out.println("Couldn't be finished within 20 seconds!");
                 queue.poll();
             } else {
-                // If resources are available
+                // eger kaynaklar musaitse
                 if (DeviceManager.getInstance().isThereEnoughDeviceSource(process) && RAM.getInstance().receiveMemory(process)) {
-                    DeviceManager.getInstance().allocateDevices(process); // Allocate needed devices
-                    // Add process to the MFQS
+                    DeviceManager.getInstance().allocateDevices(process); // gerekli kaynaklari isgal et
+                    // prosesi MFQS'e ekle
                     mfqs.addProcess(process, process.getPriority() - 1);
                     queue.poll();
                 }
             }
             count--;
         }
-        // Trigger the MFQS
+        // MFQS'yi tetikle
         mfqs.triggerScheduler(realTimeStatus);
     }
 
