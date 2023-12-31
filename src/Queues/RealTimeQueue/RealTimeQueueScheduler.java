@@ -19,8 +19,11 @@ public class RealTimeQueueScheduler {
     }
 
     public void addProcess(Proces task) {
+        if(task.getExecutionTime() < 20){
         task.ready();
         realTimeQueue.add(task);
+    }else
+        System.out.println("Process execution time exceeds 20sec limit!");
     }
 
     public boolean triggerScheduler() {
