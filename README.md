@@ -20,7 +20,7 @@ This application simulates the following features of an operating system:
 ## Installation
 
 To run this application, you will need Eclipse or Android Studio with Java support. Additionally,
-Java Development Kit (JDK) version 8 or higher must be installed.
+Java Development Kit (JDK) version 17 or higher must be installed.
 
 Follow these steps to install the application:
 
@@ -63,8 +63,6 @@ This application was developed with reference to the following sources:
 - [Operating Systems: Three Easy Pieces](https://github.com/mfts/papermark) by Remzi H.
   Arpaci-Dusseau and Andrea C. Arpaci-Dusseau
 - [Operating Systems: From 0 to 1](https://github.com/mfts/papermark.git) by Tu, Do Hoang
-- [Operating Systems Development Series] by BrokenThorn Entertainment
-- [Writing a Simple Operating System from Scratch] by Nick Blundell
 
 ## Contributors
 
